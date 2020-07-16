@@ -38,9 +38,8 @@ export default class AuthService {
     }
 
     signinRedirectCallback = () => {
-        this.UserManager.signinRedirectCallback().then((user) => {
-            console.log('signinRedirectCallback');
-            console.log(user);
+        this.UserManager.signinRedirectCallback().then(() => {
+            ""
         });
     };
 
@@ -68,10 +67,8 @@ export default class AuthService {
     };
 
     isAuthenticated = () => {
-        console.log('isAuthenticated');
         const oidcStorage = JSON.parse(sessionStorage.getItem(`oidc.user:${process.env.REACT_APP_SSO_ISSUER_URL}:${process.env.REACT_APP_SSO_CLIENT_ID}`) ?? '{}')
-        console.log(oidcStorage);
-        console.log(`oidcStorage = ${(!!oidcStorage && !!oidcStorage.access_token)}`);
+
         return (!!oidcStorage && !!oidcStorage.access_token);
     };
 

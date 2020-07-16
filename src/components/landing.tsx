@@ -7,7 +7,6 @@ export class Landing extends Component {
         <h1>Hello World</h1>
         <ul>
           <li><a href="/dashboard">Dashboard</a></li>
-
         </ul>
       </div>
     );
