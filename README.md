@@ -42,3 +42,39 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+
+## Running bash commands from the container
+
+Please run all bash(terminal) related commands from the `communities-react-app-dev` container. This includes:
+
+- Installing new npm modules
+- Generating types
+- Pretty much all the scripts commands in the package.json file
+
+The one exception to this rule is the below command that will open an interactive terminal for the `pjx-react-dev` container. Once in this interactive terminal you can now run your commands the same as you would from your local terminal.
+
+```bash
+# run from your computer's terminal
+npm run docker:exec
+```
+
+If successful you should see the following in your termianl:
+
+```bash
+# This is showing me logged in as root user.
+root@2lsk39bd:/usr/app
+```
+
+By default your working directory should be `usr/app`, which is the root directory for the **nextjs** app. All commands should be run from here.
+
+To exit the interactive terminal run the following:
+
+```bash
+exit
+```
+
+## Authentication
+
+[oidc-client](https://github.com/IdentityModel/oidc-client-js/wiki)
+
