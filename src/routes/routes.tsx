@@ -8,6 +8,7 @@ import { PrivateRoute } from "./privateRoute";
 import { SilentRenew } from "../components/auth/silentRenew";
 import { Landing } from "../components/landing"
 import { Dashboard } from "../components/dashboard";
+import Cities from "../components/cities";
 
 
 export const Routes = (
@@ -17,6 +18,7 @@ export const Routes = (
         <Route exact={true} path="/logout/callback" component={LogoutCallback} />
         <Route exact={true} path="/silentrenew" component={SilentRenew} />
         <PrivateRoute path="/dashboard" component={Dashboard} />
+        <PrivateRoute path="/cities" component={Cities} />
         <Route path="/" component={Landing} /> 
     </Switch>
 );
