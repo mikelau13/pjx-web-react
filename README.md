@@ -29,13 +29,15 @@ Runs the app in the development mode.<br />
 
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
+By clicking on the `dashboard` button, the page will forward you to the `pjx-sso-identityserver` to sign on; you can sign-on using username=`alice` password=`alice`
+
 
 ### `npm run build`
 
 Builds the app for production to the `build` folder.
 
 ```bash
-npm run bild
+npm run build
 ```
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
