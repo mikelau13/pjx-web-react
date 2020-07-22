@@ -1,45 +1,46 @@
-// import React from 'react';
-// import logo from './logo.svg';
-// import './App.css';
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.tsx</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Hello World!
-//         </a>
-//         <a href="http://www.nba.com">Sign In</a>
-//       </header>
-//     </div>
-//   );
-// }
-
-// export default App;
-
-
-import React, {Component} from "react";
+import React, { useState } from "react";
 import { AuthProvider } from "./providers/authProvider";
-import { BrowserRouter } from "react-router-dom";
-import { Routes } from "./routes/routes";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+import Title from './components/Header/title';
+import ErrorModal from './components/Alert/errorModal';  
 
-export class App extends Component {
-    render() {
-        return (
-            <AuthProvider>
-              <BrowserRouter children={Routes} basename={"/"} />
-            </AuthProvider>
-        );
-    }
-}
+import { Callback } from "./components/auth/callback";
+import { Logout } from "./components/auth/logout";
+import { LogoutCallback } from "./components/auth/logoutCallback";
+import { PrivateRoute } from "./routes/privateRoute";
+import { SilentRenew } from "./components/auth/silentRenew";
+import { Landing } from "./components/landing"
+import { Dashboard } from "./components/Dashboard/dashboard";
+import Register from "./components/Register/register";
+import Cities from "./components/cities";
 
-export default App;
+function App() {
+    const [title, updateTitle] = useState(null);
+    const [errorMessage, updateErrorMessage] = useState(null);
+    return (
+        <AuthProvider>
+            <BrowserRouter>
+            <div className="App">
+                <Title title={title}/>
+                <div className="container d-flex align-items-center flex-column">
+                    <Switch>
+                        <Route path="/register">
+                            <Register showError={updateErrorMessage} updateTitle={updateTitle}/>
+                        </Route>
+                        <Route exact={true} path="/signin-oidc" component={Callback} />
+                        <Route exact={true} path="/logout" component={Logout} />
+                        <Route exact={true} path="/logout/callback" component={LogoutCallback} />
+                        <Route exact={true} path="/silentrenew" component={SilentRenew} />
+                        <PrivateRoute path="/dashboard" component={Dashboard} />
+                        <PrivateRoute path="/cities" component={Cities} />
+                        <Route path="/" component={Landing} /> 
+                    </Switch>
+                    <ErrorModal errorMessage={errorMessage} hideError={updateErrorMessage}/>
+                </div>
+            </div>
+            </BrowserRouter>
+        </AuthProvider>
+    );
+  }
+  
+  export default App;

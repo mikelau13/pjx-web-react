@@ -11,7 +11,8 @@ export const IDENTITY_CONFIG = {
     response_type: "code", //(string, default: 'id_token'): The type of response desired from the OIDC provider.
     grantType: "password",
     scope: "openid profile api1", //(string, default: 'openid'): The scope being requested from the OIDC provider.
-    webAuthResponseType: "code"
+    webAuthResponseType: "code",
+    registration_url: process.env.REACT_APP_SSO_ISSUER_URL + "/api/register"
 };
 
 export const METADATA_OIDC = {
