@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Suspense, lazy } from "react";
 import { AuthProvider } from "./providers/authProvider";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Title from './components/Header/title';
@@ -18,50 +18,16 @@ import Link from '@material-ui/core/Link';
 import LeftNavigator from './components/Menu/LeftNavigator';
 import Header from './components/Header/header';
 
-
 import { Callback } from "./components/auth/callback";
 import { Logout } from "./components/auth/logout";
 import { LogoutCallback } from "./components/auth/logoutCallback";
 import { PrivateRoute } from "./routes/privateRoute";
 import { SilentRenew } from "./components/auth/silentRenew";
-import { Landing } from "./components/landing"
-import { Dashboard } from "./components/Dashboard/dashboard";
-import Register from "./components/Register/register";
-import Cities from "./components/cities";
 
-function AppOld() {
-    const [title, updateTitle] = useState(null);
-    const [errorMessage, updateErrorMessage] = useState(null);
-
-    return (
-        <AuthProvider>
-            <BrowserRouter>
-            <div className="App">
-                <Title title={title}/>
-                <div className="container d-flex align-items-center flex-column">
-                    <Switch>
-                        <Route path="/register">
-                            <Register showError={updateErrorMessage} updateTitle={updateTitle}/>
-                        </Route>
-                        <Route exact={true} path="/signin-oidc" component={Callback} />
-                        <Route exact={true} path="/logout" component={Logout} />
-                        <Route exact={true} path="/logout/callback" component={LogoutCallback} />
-                        <Route exact={true} path="/silentrenew" component={SilentRenew} />
-                        <PrivateRoute path="/dashboard" component={Dashboard} />
-                        <PrivateRoute path="/cities" component={Cities} />
-                        <Route path="/" component={Landing} /> 
-                    </Switch>
-                    <ErrorModal errorMessage={errorMessage} hideError={updateErrorMessage}/>
-                </div>
-            </div>
-            </BrowserRouter>
-        </AuthProvider>
-    );
-}
-  
-//export default App;
-
-
+const Register = lazy(() => import("./components/Register/register"));
+const Cities = lazy(() => import("./components/cities"));
+const Dashboard = lazy(() => import("./components/Dashboard/dashboard"));
+const Landing = lazy(() => import("./components/landing"));
 
 function Copyright() {
   return (
@@ -233,47 +199,49 @@ function App(props: AppProps) {
         <ThemeProvider theme={theme}>
         <div className={classes.root}>
             <CssBaseline />
-            <nav className={classes.drawer}>
-            <Hidden smUp implementation="js">
-                <LeftNavigator
-                    PaperProps={{ style: { width: drawerWidth } }}
-                    variant="temporary"
-                    open={mobileOpen}
-                    onClose={handleDrawerToggle}
-                />
-            </Hidden>
-            <Hidden xsDown implementation="css">
-                <LeftNavigator PaperProps={{ style: { width: drawerWidth } }} />
-            </Hidden>
-            </nav>
-            <div className={classes.app}>
-            <Header onDrawerToggle={handleDrawerToggle} />
-            <main className={classes.main}>
-                <BrowserRouter>
-                <div className="App">
-                    <Title title={title}/>
-                    <div className="container d-flex align-items-center flex-column">
-                        <Switch>
-                            <Route path="/register">
-                                <Register showError={updateErrorMessage} updateTitle={updateTitle}/>
-                            </Route>
-                            <Route exact={true} path="/signin-oidc" component={Callback} />
-                            <Route exact={true} path="/logout" component={Logout} />
-                            <Route exact={true} path="/logout/callback" component={LogoutCallback} />
-                            <Route exact={true} path="/silentrenew" component={SilentRenew} />
-                            <PrivateRoute path="/dashboard" component={Dashboard} />
-                            <PrivateRoute path="/cities" component={Cities} />
-                            <Route path="/" component={Landing} /> 
-                        </Switch>
-                        <ErrorModal errorMessage={errorMessage} hideError={updateErrorMessage}/>
+            <BrowserRouter>
+                <nav className={classes.drawer}>
+                <Hidden smUp implementation="js">
+                    <LeftNavigator
+                        PaperProps={{ style: { width: drawerWidth } }}
+                        variant="temporary"
+                        open={mobileOpen}
+                        onClose={handleDrawerToggle}
+                    />
+                </Hidden>
+                <Hidden xsDown implementation="css">
+                    <LeftNavigator PaperProps={{ style: { width: drawerWidth } }} />
+                </Hidden>
+                </nav>
+                <div className={classes.app}>
+                <Header onDrawerToggle={handleDrawerToggle} />
+                <main className={classes.main}>                    
+                    <div className="App">
+                        <Title title={title}/>
+                        <div className="container d-flex align-items-center flex-column">
+                          <Suspense fallback={<div>Loading...</div>}>
+                              <Switch>
+                                  <Route path="/register">
+                                      <Register showError={updateErrorMessage} updateTitle={updateTitle}/>
+                                  </Route>
+                                  <Route exact={true} path="/signin-oidc" component={Callback} />
+                                  <Route exact={true} path="/logout" component={Logout} />
+                                  <Route exact={true} path="/logout/callback" component={LogoutCallback} />
+                                  <Route exact={true} path="/silentrenew" component={SilentRenew} />
+                                  <PrivateRoute path="/dashboard" component={Dashboard} />
+                                  <PrivateRoute path="/cities" component={Cities} />
+                                  <Route path="/" component={Landing} /> 
+                              </Switch>
+                            </Suspense>
+                            <ErrorModal errorMessage={errorMessage} hideError={updateErrorMessage}/>
+                        </div>
                     </div>
+                </main>
+                <footer className={classes.footer}>
+                    <Copyright />
+                </footer>
                 </div>
-                </BrowserRouter>
-            </main>
-            <footer className={classes.footer}>
-                <Copyright />
-            </footer>
-            </div>
+            </BrowserRouter>
         </div>
         </ThemeProvider>
     </AuthProvider>

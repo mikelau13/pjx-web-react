@@ -3,12 +3,13 @@ import clsx from 'clsx';
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import Drawer, { DrawerProps } from '@material-ui/core/Drawer';
+import { Link } from 'react-router-dom';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
-import PeopleIcon from '@material-ui/icons/People';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import DnsRoundedIcon from '@material-ui/icons/DnsRounded';
 import PermMediaOutlinedIcon from '@material-ui/icons/PhotoSizeSelectActual';
 import PublicIcon from '@material-ui/icons/Public';
@@ -16,27 +17,26 @@ import SettingsEthernetIcon from '@material-ui/icons/SettingsEthernet';
 import SettingsInputComponentIcon from '@material-ui/icons/SettingsInputComponent';
 import TimerIcon from '@material-ui/icons/Timer';
 import SettingsIcon from '@material-ui/icons/Settings';
-import PhonelinkSetupIcon from '@material-ui/icons/PhonelinkSetup';
 import { Omit } from '@material-ui/types';
 
 const categories = [
   {
     id: 'Develop',
     children: [
-      { id: 'Authentication', icon: <PeopleIcon />, active: true },
-      { id: 'Database', icon: <DnsRoundedIcon /> },
-      { id: 'Storage', icon: <PermMediaOutlinedIcon /> },
-      { id: 'Hosting', icon: <PublicIcon /> },
-      { id: 'Functions', icon: <SettingsEthernetIcon /> },
-      { id: 'ML Kit', icon: <SettingsInputComponentIcon /> },
+      { id: 'Home', icon: <HomeIcon />, active: true, to: '/' },
+      { id: 'Database', icon: <DnsRoundedIcon />, to: '/' },
+      { id: 'Dashboard', icon: <PermMediaOutlinedIcon />, to: '/dashboard' },
+      { id: 'Hosting', icon: <PublicIcon />, to: '/' },
+      { id: 'Functions', icon: <SettingsEthernetIcon />, to: '/' },
+      { id: 'ML Kit', icon: <SettingsInputComponentIcon />, to: '/' },
     ],
   },
   {
-    id: 'Quality',
+    id: 'Authentication',
     children: [
-      { id: 'Analytics', icon: <SettingsIcon /> },
-      { id: 'Performance', icon: <TimerIcon /> },
-      { id: 'Test Lab', icon: <PhonelinkSetupIcon /> },
+      { id: 'Register', icon: <PersonAddIcon />, to: '/register' },
+      { id: 'Sign On', icon: <SettingsIcon />, to: '/dashboard' },
+      { id: 'Sign Out', icon: <TimerIcon />, to: '/logout' },
     ],
   },
 ];
@@ -92,18 +92,22 @@ function LeftNavigator(props: LeftNavigatorProps) {
     <Drawer variant="permanent" {...other}>
       <List disablePadding>
         <ListItem className={clsx(classes.firebase, classes.item, classes.itemCategory)}>
-          Paperbase
+          <a target="_blank" href="https://github.com/users/mikelau13/projects/1" rel="noopener noreferrer">
+              Pjx
+          </a>
         </ListItem>
         <ListItem className={clsx(classes.item, classes.itemCategory)}>
           <ListItemIcon className={classes.itemIcon}>
-            <HomeIcon />
+            <SettingsEthernetIcon />
           </ListItemIcon>
           <ListItemText
             classes={{
               primary: classes.itemPrimary,
             }}
           >
-            Project Overview
+            <a target="_blank" href="https://www.github.com/mikelau13/pjx-root/" rel="noopener noreferrer">
+                Git: Pjx Project
+            </a>
           </ListItemText>
         </ListItem>
         {categories.map(({ id, children }) => (
@@ -117,11 +121,12 @@ function LeftNavigator(props: LeftNavigatorProps) {
                 {id}
               </ListItemText>
             </ListItem>
-            {children.map(({ id: childId, icon, active }) => (
+            {children.map(({ id: childId, icon, active, to }) => (
               <ListItem
                 key={childId}
                 button
                 className={clsx(classes.item, active && classes.itemActiveItem)}
+                component={({innerRef,...props}) => <Link {...props} to={to} />}
               >
                 <ListItemIcon className={classes.itemIcon}>{icon}</ListItemIcon>
                 <ListItemText

@@ -6,7 +6,6 @@ import Grid from '@material-ui/core/Grid';
 import HelpIcon from '@material-ui/icons/Help';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
-import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import Tab from '@material-ui/core/Tab';
@@ -67,9 +66,9 @@ function Header(props: HeaderProps) {
             </Hidden>
             <Grid item xs />
             <Grid item>
-              <Link className={classes.link} href="#" variant="body2">
-                Go to docs
-              </Link>
+              <a className={classes.link} target="_blank" href="https://www.github.com/mikelau13/" rel="noopener noreferrer">
+                Visit my repositories
+              </a>
             </Grid>
             <Grid item>
               <Tooltip title="Alerts • No alerts">
