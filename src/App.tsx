@@ -1,45 +1,251 @@
-// import React from 'react';
-// import logo from './logo.svg';
-// import './App.css';
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.tsx</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Hello World!
-//         </a>
-//         <a href="http://www.nba.com">Sign In</a>
-//       </header>
-//     </div>
-//   );
-// }
-
-// export default App;
-
-
-import React, {Component} from "react";
+import React, { useState, Suspense, lazy } from "react";
 import { AuthProvider } from "./providers/authProvider";
-import { BrowserRouter } from "react-router-dom";
-import { Routes } from "./routes/routes";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+import Title from './components/Header/title';
+import ErrorModal from './components/Alert/errorModal';  
 
-export class App extends Component {
-    render() {
-        return (
-            <AuthProvider>
-              <BrowserRouter children={Routes} basename={"/"} />
-            </AuthProvider>
-        );
-    }
+import {
+  createMuiTheme,
+  createStyles,
+  ThemeProvider,
+  withStyles,
+  WithStyles,
+} from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Hidden from '@material-ui/core/Hidden';
+import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
+import LeftNavigator from './components/Menu/LeftNavigator';
+import Header from './components/Header/header';
+
+import { Callback } from "./components/Auth/callback";
+import { Logout } from "./components/Auth/logout";
+import { LogoutCallback } from "./components/Auth/logoutCallback";
+import { PrivateRoute } from "./routes/privateRoute";
+import { SilentRenew } from "./components/Auth/silentRenew";
+
+const Register = lazy(() => import("./components/Register/register"));
+const Cities = lazy(() => import("./components/cities"));
+const Dashboard = lazy(() => import("./components/Dashboard/dashboard"));
+const Landing = lazy(() => import("./components/landing"));
+
+function Copyright() {
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      {'Copyright © '}
+      <Link color="inherit" href="mailto:mikelau13@hotmail.com">
+        Mike Lau
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
 }
 
-export default App;
+let theme = createMuiTheme({
+  palette: {
+    primary: {
+      light: '#63ccff',
+      main: '#009be5',
+      dark: '#006db3',
+    },
+  },
+  typography: {
+    h5: {
+      fontWeight: 500,
+      fontSize: 26,
+      letterSpacing: 0.5,
+    },
+  },
+  shape: {
+    borderRadius: 8,
+  },
+  props: {
+    MuiTab: {
+      disableRipple: true,
+    },
+  },
+  mixins: {
+    toolbar: {
+      minHeight: 48,
+    },
+  },
+});
+
+theme = {
+  ...theme,
+  overrides: {
+    MuiDrawer: {
+      paper: {
+        backgroundColor: '#18202c',
+      },
+    },
+    MuiButton: {
+      label: {
+        textTransform: 'none',
+      },
+      contained: {
+        boxShadow: 'none',
+        '&:active': {
+          boxShadow: 'none',
+        },
+      },
+    },
+    MuiTabs: {
+      root: {
+        marginLeft: theme.spacing(1),
+      },
+      indicator: {
+        height: 3,
+        borderTopLeftRadius: 3,
+        borderTopRightRadius: 3,
+        backgroundColor: theme.palette.common.white,
+      },
+    },
+    MuiTab: {
+      root: {
+        textTransform: 'none',
+        margin: '0 16px',
+        minWidth: 0,
+        padding: 0,
+        [theme.breakpoints.up('md')]: {
+          padding: 0,
+          minWidth: 0,
+        },
+      },
+    },
+    MuiIconButton: {
+      root: {
+        padding: theme.spacing(1),
+      },
+    },
+    MuiTooltip: {
+      tooltip: {
+        borderRadius: 4,
+      },
+    },
+    MuiDivider: {
+      root: {
+        backgroundColor: '#404854',
+      },
+    },
+    MuiListItemText: {
+      primary: {
+        fontWeight: theme.typography.fontWeightMedium,
+      },
+    },
+    MuiListItemIcon: {
+      root: {
+        color: 'inherit',
+        marginRight: 0,
+        '& svg': {
+          fontSize: 20,
+        },
+      },
+    },
+    MuiAvatar: {
+      root: {
+        width: 32,
+        height: 32,
+      },
+    },
+  },
+};
+
+const drawerWidth = 256;
+
+const styles = createStyles({
+  root: {
+    display: 'flex',
+    minHeight: '100vh',
+  },
+  drawer: {
+    [theme.breakpoints.up('sm')]: {
+      width: drawerWidth,
+      flexShrink: 0,
+    },
+  },
+  app: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  main: {
+    flex: 1,
+    padding: theme.spacing(6, 4),
+    background: '#eaeff1',
+  },
+  footer: {
+    padding: theme.spacing(2),
+    background: '#eaeff1',
+  },
+});
+
+export interface AppProps extends WithStyles<typeof styles> {}
+
+function App(props: AppProps) {
+  const { classes } = props;
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const [title, updateTitle] = useState(null);
+  const [errorMessage, updateErrorMessage] = useState(null);
+
+  return (
+    <AuthProvider>
+        <ThemeProvider theme={theme}>
+        <div className={classes.root}>
+            <CssBaseline />
+            <BrowserRouter>
+                <nav className={classes.drawer}>
+                <Hidden smUp implementation="js">
+                    <LeftNavigator
+                        PaperProps={{ style: { width: drawerWidth } }}
+                        variant="temporary"
+                        open={mobileOpen}
+                        onClose={handleDrawerToggle}
+                    />
+                </Hidden>
+                <Hidden xsDown implementation="css">
+                    <LeftNavigator PaperProps={{ style: { width: drawerWidth } }} />
+                </Hidden>
+                </nav>
+                <div className={classes.app}>
+                <Header onDrawerToggle={handleDrawerToggle} />
+                <main className={classes.main}>                    
+                    <div className="App">
+                        <Title title={title}/>
+                        <div className="container d-flex align-items-center flex-column">
+                          <Suspense fallback={<div>Loading...</div>}>
+                              <Switch>
+                                  <Route path="/register">
+                                      <Register showError={updateErrorMessage} updateTitle={updateTitle}/>
+                                  </Route>
+                                  <Route exact={true} path="/signin-oidc" component={Callback} />
+                                  <Route exact={true} path="/logout" component={Logout} />
+                                  <Route exact={true} path="/logout/callback" component={LogoutCallback} />
+                                  <Route exact={true} path="/silentrenew" component={SilentRenew} />
+                                  <PrivateRoute path="/dashboard" component={Dashboard} />
+                                  <PrivateRoute path="/cities" component={Cities} />
+                                  <Route path="/" component={Landing} /> 
+                              </Switch>
+                            </Suspense>
+                            <ErrorModal errorMessage={errorMessage} hideError={updateErrorMessage}/>
+                        </div>
+                    </div>
+                </main>
+                <footer className={classes.footer}>
+                    <Copyright />
+                </footer>
+                </div>
+            </BrowserRouter>
+        </div>
+        </ThemeProvider>
+    </AuthProvider>
+  );
+}
+
+export default withStyles(styles)(App);
