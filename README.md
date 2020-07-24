@@ -2,17 +2,16 @@
 
 ## Dependencies
 
-This projet is a web client that depending on other projects, in order to launch the entire solution, please refer to instructions in [pjx-root](https://github.com/mikelau13/pjx-root).
+This projet is a web client that depends other projects.  In order to launch the entire solution, please refer to instructions in [pjx-root](https://github.com/mikelau13/pjx-root).
 
 
 ## Libraries 
 
-[oidc-client](https://github.com/IdentityModel/oidc-client-js/wiki) to connect to the [identity server](https://github.com/mikelau13/pjx-sso-identityserver).
+- [oidc-client](https://github.com/IdentityModel/oidc-client-js/wiki) - to connect to the [identity server](https://github.com/mikelau13/pjx-sso-identityserver).
+- [apollo-client](https://www.apollographql.com/docs/react/) - to hook to the [apollo-server](https://github.com/mikelau13/pjx-graphql-apollo).
+- [Material-UI](https://material-ui.com/) - a React UI framework
 
-TODO: configure challenge code.
-
-[apollo-client](https://www.apollographql.com/docs/react/) to hook to the [apollo-server](https://github.com/mikelau13/pjx-graphql-apollo).
-
+TODO: configure challenge code for `oidc-client` with `identity server`.
 
 
 ## Available Scripts

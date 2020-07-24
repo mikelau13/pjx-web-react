@@ -18,11 +18,11 @@ import Link from '@material-ui/core/Link';
 import LeftNavigator from './components/Menu/LeftNavigator';
 import Header from './components/Header/header';
 
-import { Callback } from "./components/auth/callback";
-import { Logout } from "./components/auth/logout";
-import { LogoutCallback } from "./components/auth/logoutCallback";
+import { Callback } from "./components/Auth/callback";
+import { Logout } from "./components/Auth/logout";
+import { LogoutCallback } from "./components/Auth/logoutCallback";
 import { PrivateRoute } from "./routes/privateRoute";
-import { SilentRenew } from "./components/auth/silentRenew";
+import { SilentRenew } from "./components/Auth/silentRenew";
 
 const Register = lazy(() => import("./components/Register/register"));
 const Cities = lazy(() => import("./components/cities"));

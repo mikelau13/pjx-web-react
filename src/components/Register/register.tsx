@@ -1,21 +1,37 @@
 import './register.css';
 import axios from 'axios';
 import React, { FunctionComponent, useState } from "react";
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 import { IDENTITY_CONFIG } from '../../utils/authConst';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+
+
+const styles = (theme: Theme) =>
+  createStyles({
+    textField: {
+      paddingTop: theme.spacing(2),
+      paddingBottom: theme.spacing(2),
+    }
+  });
+
 
 interface RegisterProps {
   updateTitle: any
   showError: any
 }
 
-const Register: FunctionComponent<RegisterProps & RouteComponentProps> = props => {
+
+const Register: FunctionComponent<RegisterProps & RouteComponentProps & WithStyles<typeof styles>> = props => {
+    const { classes } = props;
+
     const [state , setState] = useState({
       email : '',
       password : '',
-      confirmPassword: '',
-      successMessage: ''
+      confirmPassword: ''
     });
+
+    const [submissionState, setSubmission] = useState({isSubmitting: false, isSubmissionComplete: false});
 
     const handleChange = (e:any) => {
       const { id, value } = e.target;
@@ -51,13 +67,14 @@ const Register: FunctionComponent<RegisterProps & RouteComponentProps> = props =
 
           axios.post(IDENTITY_CONFIG.registration_url, payload, { headers, validateStatus: (status) => { return (status >= 200 && status < 300) || status === 400; } })
               .then(function (response) {
-                  if(response.data.code === 200){
+                  if(response.status === 200){
                       setState(prevState => ({
                           ...prevState,
                           successMessage : 'Registration successful. Redirecting to home page..'
-                      }))
-                      redirectToHome();
-                      props.showError(null)
+                      }));
+                      //redirectToHome();
+                      props.showError(null);
+                      setSubmission({isSubmitting: false, isSubmissionComplete: true});
                   } else {
                     console.log(response);
                     if(response.data.PasswordRequiresLower) {
@@ -81,21 +98,25 @@ const Register: FunctionComponent<RegisterProps & RouteComponentProps> = props =
                     if(response.data.Email) {
                       props.showError(response.data.Email[0]);
                     }
+                    setSubmission({isSubmitting: false, isSubmissionComplete: false});
                   }
               })
               .catch(function (error) {
                   console.log(error);
-                  props.showError('Unexpected Error')
+                  props.showError('Unexpected Error');
+                  setSubmission({isSubmitting: false, isSubmissionComplete: false});
               });    
       } else {
-        props.showError('Please enter valid username and password')    
-      }      
+        props.showError('Please enter valid username and password');
+        setSubmission({isSubmitting: false, isSubmissionComplete: false});
+      }
   }
 
     const handleSubmit = (e:any) => {
       e.preventDefault();
 
       if (state.password === state.confirmPassword) {
+        setSubmission({isSubmitting: true, isSubmissionComplete: false});
         sendDetailsToServer();
       } else {
         props.showError('Passwords do not match');
@@ -103,52 +124,58 @@ const Register: FunctionComponent<RegisterProps & RouteComponentProps> = props =
     };
 
     return (
-      <div className="register">
-            <form>
-                <div>
-                <label>Email address</label>
-                <input type="email" 
-                       id="email" 
-                       placeholder="Enter email"
-                       value={state.email}
-                       onChange={handleChange}
-                />
-                <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
-                </div>
-                <div>
-                    <label>Password</label>
-                    <input type="password" 
-                        id="password" 
-                        placeholder="Password"
-                        value={state.password}
-                        onChange={handleChange}
-                    />
-                </div>
-                <div>
-                    <label>Confirm Password</label>
-                    <input type="password" 
-                        id="confirmPassword" 
-                        placeholder="Confirm Password"
-                        value={state.confirmPassword}
-                        onChange={handleChange}
-                    />
-                </div>
-                <button 
-                    type="submit" 
-                    onClick={handleSubmit}
-                >
-                    Register
-                </button>
-            </form>
-            <div style={{display: state.successMessage ? 'block' : 'none' }}>
-                {state.successMessage}
-            </div>
-            <div>
-                <span>Already have an account? </span>
-                <span onClick={() => redirectToLogin()}>Login here</span> 
-            </div>
-        </div>
+      <React.Fragment>
+        {!submissionState.isSubmissionComplete && 
+          <div className="register">
+              <div>
+                  <span>Already have an account? </span>
+                  <Link to='/login'>Login here</Link>
+              </div>
+              <div className="break"></div>
+              <form>
+                  <div>
+                    <TextField
+                        required
+                        label="Email address"
+                        name="email"
+                        placeholder="Enter email"
+                        className={classes.textField}
+                        variant="outlined"
+                      />
+                  </div>
+                  <div>
+                    <TextField
+                        required
+                        type="password"
+                        label="Email Password"
+                        name="password"
+                        placeholder="Enter password"
+                        className={classes.textField}
+                        variant="outlined"
+                      />
+                  </div>
+                  <div>
+                    <TextField
+                        required
+                        type="password"
+                        label="Confirm Password"
+                        name="confirmPassword"
+                        placeholder="Confirm password"
+                        className={classes.textField}
+                        variant="outlined"
+                      />
+                  </div>
+                  <button type="submit" disabled={submissionState.isSubmitting} onClick={handleSubmit}>Register</button>
+              </form>
+          </div>
+        }
+        {submissionState.isSubmissionComplete && 
+          <div className="register">
+            <h3>Thank you for your registration!</h3>
+          </div>
+        }
+      </React.Fragment>
     );
 };
 
-export default withRouter(Register);
+export default withStyles(styles)(withRouter(Register));
