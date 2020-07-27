@@ -5,6 +5,7 @@ import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 import { IDENTITY_CONFIG } from '../../utils/authConst';
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 
 
 const styles = (theme: Theme) =>
@@ -36,21 +37,13 @@ const Register: FunctionComponent<RegisterProps & RouteComponentProps & WithStyl
     const handleChange = (e:any) => {
       const { id, value } = e.target;
 
+      props.showError(null);
+
       setState(prevState => ({
         ...prevState,
         [id]: value
       }));
     };
-
-    const redirectToLogin = () => {
-      props.updateTitle('Login')
-      props.history.push('/login'); 
-  }
-
-    const redirectToHome = () => {
-      props.updateTitle('Home')
-      props.history.push('/home');
-    }
 
     const sendDetailsToServer = () => {
       if(state.email.length && state.password.length) {
@@ -68,36 +61,13 @@ const Register: FunctionComponent<RegisterProps & RouteComponentProps & WithStyl
           axios.post(IDENTITY_CONFIG.registration_url, payload, { headers, validateStatus: (status) => { return (status >= 200 && status < 300) || status === 400; } })
               .then(function (response) {
                   if(response.status === 200){
-                      setState(prevState => ({
-                          ...prevState,
-                          successMessage : 'Registration successful. Redirecting to home page..'
-                      }));
-                      //redirectToHome();
                       props.showError(null);
                       setSubmission({isSubmitting: false, isSubmissionComplete: true});
                   } else {
-                    console.log(response);
-                    if(response.data.PasswordRequiresLower) {
-                      props.showError(response.data.PasswordRequiresLower[0]);
-                    }
-                    if(response.data.PasswordRequiresNonAlphanumeric) {
-                      props.showError(response.data.PasswordRequiresNonAlphanumeric[0]);
-                    }
-                    if(response.data.PasswordRequiresUpper) {
-                      props.showError(response.data.PasswordRequiresUpper[0]);
-                    }
-                    if(response.data.PasswordTooShort) {
-                      props.showError(response.data.PasswordTooShort[0]);
-                    }
-                    if(response.data.PasswordRequiresDigit) {
-                      props.showError(response.data.PasswordRequiresDigit[0]);
-                    }
-                    if(response.data.DuplicateUserName) {
-                      props.showError(response.data.DuplicateUserName[0]);
-                    }
-                    if(response.data.Email) {
-                      props.showError(response.data.Email[0]);
-                    }
+                    Object.keys(response.data).forEach(key => {
+                      props.showError(Reflect.get(response.data,key)[0]);
+                    })
+
                     setSubmission({isSubmitting: false, isSubmissionComplete: false});
                   }
               })
@@ -131,16 +101,18 @@ const Register: FunctionComponent<RegisterProps & RouteComponentProps & WithStyl
                   <span>Already have an account? </span>
                   <Link to='/login'>Login here</Link>
               </div>
-              <div className="break"></div>
+              <div className="break" />
               <form>
                   <div>
                     <TextField
                         required
                         label="Email address"
                         name="email"
+                        id="email"
                         placeholder="Enter email"
                         className={classes.textField}
                         variant="outlined"
+                        onChange={handleChange}
                       />
                   </div>
                   <div>
@@ -149,9 +121,11 @@ const Register: FunctionComponent<RegisterProps & RouteComponentProps & WithStyl
                         type="password"
                         label="Email Password"
                         name="password"
+                        id="password"
                         placeholder="Enter password"
                         className={classes.textField}
                         variant="outlined"
+                        onChange={handleChange}
                       />
                   </div>
                   <div>
@@ -160,18 +134,20 @@ const Register: FunctionComponent<RegisterProps & RouteComponentProps & WithStyl
                         type="password"
                         label="Confirm Password"
                         name="confirmPassword"
+                        id="confirmPassword"
                         placeholder="Confirm password"
                         className={classes.textField}
                         variant="outlined"
+                        onChange={handleChange}
                       />
                   </div>
-                  <button type="submit" disabled={submissionState.isSubmitting} onClick={handleSubmit}>Register</button>
+                  <Button variant="contained" color="primary" size="large" disabled={submissionState.isSubmitting} onClick={handleSubmit}>Register</Button>
               </form>
           </div>
         }
         {submissionState.isSubmissionComplete && 
           <div className="register">
-            <h3>Thank you for your registration!</h3>
+            <h3>An activation link have been emailed to you, please click on the link to complete the registration.</h3>
           </div>
         }
       </React.Fragment>

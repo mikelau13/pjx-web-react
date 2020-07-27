@@ -24,6 +24,7 @@ import { LogoutCallback } from "./components/Auth/logoutCallback";
 import { PrivateRoute } from "./routes/privateRoute";
 import { SilentRenew } from "./components/Auth/silentRenew";
 
+const Activate = lazy(() => import("./components/Register/activate"));
 const Register = lazy(() => import("./components/Register/register"));
 const Cities = lazy(() => import("./components/cities"));
 const Dashboard = lazy(() => import("./components/Dashboard/dashboard"));
@@ -228,6 +229,9 @@ function App(props: AppProps) {
                                   <Route exact={true} path="/logout" component={Logout} />
                                   <Route exact={true} path="/logout/callback" component={LogoutCallback} />
                                   <Route exact={true} path="/silentrenew" component={SilentRenew} />
+                                  <Route exact={true} path="/account/activate">
+                                    <Activate showError={updateErrorMessage} />
+                                  </Route>
                                   <PrivateRoute path="/dashboard" component={Dashboard} />
                                   <PrivateRoute path="/cities" component={Cities} />
                                   <Route path="/" component={Landing} /> 
