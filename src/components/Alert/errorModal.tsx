@@ -32,7 +32,7 @@ const ErrorModal: FunctionComponent<ErrorModalProps> = props => {
             style={{ display: modalDisplay }}
         >
             <div>
-                <span>{props.errorMessage}</span>
+                <span className="errorMessage">{props.errorMessage}</span>
                 <button type="button" aria-label="Close" onClick={() => closeModal()}>
                     <span aria-hidden="true">&times;</span>
                 </button>
