@@ -17,14 +17,13 @@ const styles = (theme: Theme) =>
   });
 
 
-interface RegisterProps {
+type RegisterProps = {
   updateTitle: any
   showError: any
 }
 
-
 const Register: FunctionComponent<RegisterProps & RouteComponentProps & WithStyles<typeof styles>> = props => {
-    const { classes } = props;
+    const { classes, updateTitle } = props;
 
     const [state , setState] = useState({
       email : '',
@@ -93,13 +92,15 @@ const Register: FunctionComponent<RegisterProps & RouteComponentProps & WithStyl
       }
     };
 
+    updateTitle('User Registration');
+
     return (
       <React.Fragment>
         {!submissionState.isSubmissionComplete && 
           <div className="register">
               <div>
-                  <span>Already have an account? </span>
-                  <Link to='/login'>Login here</Link>
+                  <span>{'Already have an account?'} </span>
+                  <Link to='/login'>{'Login here'}</Link>
               </div>
               <div className="break" />
               <form>
@@ -141,13 +142,13 @@ const Register: FunctionComponent<RegisterProps & RouteComponentProps & WithStyl
                         onChange={handleChange}
                       />
                   </div>
-                  <Button variant="contained" color="primary" size="large" disabled={submissionState.isSubmitting} onClick={handleSubmit}>Register</Button>
+                  <Button variant="contained" color="primary" size="large" disabled={submissionState.isSubmitting} onClick={handleSubmit}>{'Register'}</Button>
               </form>
           </div>
         }
         {submissionState.isSubmissionComplete && 
           <div className="register">
-            <h3>An activation link have been emailed to you, please click on the link to complete the registration.</h3>
+            <h3>{'An activation link have been emailed to you, please click on the link in the email to complete the registration.'}</h3>
           </div>
         }
       </React.Fragment>

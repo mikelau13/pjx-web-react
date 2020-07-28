@@ -83,10 +83,28 @@ const styles = (theme: Theme) =>
     },
   });
 
-export interface LeftNavigatorProps extends Omit<DrawerProps, 'classes'>, WithStyles<typeof styles> {}
+export interface LeftNavigatorProps {
+  isLoggedIn?: boolean;
+}
 
-function LeftNavigator(props: LeftNavigatorProps) {
+function LeftNavigator(props: LeftNavigatorProps & Omit<DrawerProps, 'classes'> & WithStyles<typeof styles>) {
   const { classes, ...other } = props;
+
+  const renderLoggedIn = () => {
+    return (
+      <div>
+        {'Place Holder'}
+      </div>
+    );
+  }
+
+  const renderLoggedOut = () => {
+    return (
+      <div>
+        {'Place Holder'}
+      </div>
+    );
+  }
 
   return (
     <Drawer variant="permanent" {...other}>

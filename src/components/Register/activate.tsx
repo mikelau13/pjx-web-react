@@ -14,7 +14,7 @@ const styles = (theme: Theme) =>
 );
 
 
-interface ActivateProps {
+type ActivateProps = {
     showError: any
 }
 
