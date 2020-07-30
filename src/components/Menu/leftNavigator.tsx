@@ -24,7 +24,7 @@ const categories = [
     id: 'Develop',
     children: [
       { id: 'Home', icon: <HomeIcon />, active: true, to: '/' },
-      { id: 'Database', icon: <DnsRoundedIcon />, to: '/' },
+      { id: 'Country List', icon: <DnsRoundedIcon />, to: '/country/all' },
       { id: 'Dashboard', icon: <PermMediaOutlinedIcon />, to: '/dashboard' },
       { id: 'Hosting', icon: <PublicIcon />, to: '/' },
       { id: 'Functions', icon: <SettingsEthernetIcon />, to: '/' },

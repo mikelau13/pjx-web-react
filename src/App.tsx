@@ -31,7 +31,7 @@ const Register = lazy(() => import("./components/Register/register"));
 const Cities = lazy(() => import("./components/cities"));
 const Dashboard = lazy(() => import("./components/Dashboard/dashboard"));
 const Landing = lazy(() => import("./components/landing"));
-const UserProfileRead = lazy(() => import("./components/UserProfile/profileRead"));
+const CountryList = lazy(() => import("./components/Country/countryList"));
 
 function Copyright() {
   return (
@@ -232,8 +232,8 @@ function App(props: AppProps) {
                                   <Route exact={true} path="/logout" component={Logout} />
                                   <Route exact={true} path="/logout/callback" component={LogoutCallback} />
                                   <Route exact={true} path="/silentrenew" component={SilentRenew} />
-                                  <UserRoute path="/account/profile">
-                                    <UserProfileRead updateTitle={updateTitle} />
+                                  <UserRoute path="/country/all">
+                                    <CountryList updateTitle={updateTitle} />
                                   </UserRoute>
                                   <Route exact={true} path="/account/activate">
                                     <Activate showError={updateErrorMessage} />
