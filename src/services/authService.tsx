@@ -1,5 +1,5 @@
 import { IDENTITY_CONFIG, METADATA_OIDC } from "../utils/authConst";
-import { UserManager, WebStorageStateStore, Log } from "oidc-client";
+import { UserManager, WebStorageStateStore, Log, User } from "oidc-client";
 
 export default class AuthService {
     UserManager: UserManager;
@@ -81,6 +81,10 @@ export default class AuthService {
                 console.log(err);
             });
     };
+
+    renewToken(): Promise<User> {
+        return this.UserManager.signinSilent();
+      }
 
     signinSilentCallback = () => {
         this.UserManager.signinSilentCallback();
