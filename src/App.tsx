@@ -2,7 +2,7 @@ import React, { useState, Suspense, lazy } from "react";
 import { AuthProvider } from "./providers/authProvider";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Title from './components/Header/title';
-import ErrorModal from './components/Alert/errorModal';  
+import ErrorModal from './components/Alert/errorModal';
 
 import {
   createMuiTheme,
@@ -11,17 +11,19 @@ import {
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Hidden from '@material-ui/core/Hidden';
-import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
-import LeftNavigator from './components/Menu/LeftNavigator';
+import { 
+  CssBaseline,
+  Hidden,
+  Typography,
+  Link
+} from '@material-ui/core';
+import LeftNavigator from './components/Menu/leftNavigator';
 import Header from './components/Header/header';
-
 import { Callback } from "./components/Auth/callback";
 import { Logout } from "./components/Auth/logout";
 import { LogoutCallback } from "./components/Auth/logoutCallback";
 import { PrivateRoute } from "./routes/privateRoute";
+import { UserRoute } from "./routes/userRoute";
 import { SilentRenew } from "./components/Auth/silentRenew";
 
 const Activate = lazy(() => import("./components/Register/activate"));
@@ -29,13 +31,14 @@ const Register = lazy(() => import("./components/Register/register"));
 const Cities = lazy(() => import("./components/cities"));
 const Dashboard = lazy(() => import("./components/Dashboard/dashboard"));
 const Landing = lazy(() => import("./components/landing"));
+const CountryList = lazy(() => import("./components/Country/countryList"));
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="mailto:mikelau13@hotmail.com">
-        Mike Lau
+        {'Mike Lau'}
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -229,6 +232,9 @@ function App(props: AppProps) {
                                   <Route exact={true} path="/logout" component={Logout} />
                                   <Route exact={true} path="/logout/callback" component={LogoutCallback} />
                                   <Route exact={true} path="/silentrenew" component={SilentRenew} />
+                                  <UserRoute path="/country/all">
+                                    <CountryList updateTitle={updateTitle} />
+                                  </UserRoute>
                                   <Route exact={true} path="/account/activate">
                                     <Activate showError={updateErrorMessage} />
                                   </Route>
