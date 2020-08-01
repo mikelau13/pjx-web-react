@@ -29,7 +29,8 @@ const Register: FunctionComponent<RegisterProps & RouteComponentProps & WithStyl
     const [state , setState] = useState({
       email : '',
       password : '',
-      confirmPassword: ''
+      confirmPassword: '',
+      displayName: '',
     });
 
     const [submissionState, setSubmission] = useState({isSubmitting: false, isSubmissionComplete: false});
@@ -53,6 +54,7 @@ const Register: FunctionComponent<RegisterProps & RouteComponentProps & WithStyl
           const payload = qs.stringify({
               Email: state.email,
               Password: state.password,
+              DisplayName: state.displayName,
           });
           const headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -103,6 +105,17 @@ const Register: FunctionComponent<RegisterProps & RouteComponentProps & WithStyl
               </div>
               <div className="break" />
               <form>
+                <div>
+                    <TextField
+                        label="Display Name"
+                        name="displayName"
+                        id="displayName"
+                        placeholder="Enter your display name"
+                        className={classes.textField}
+                        variant="outlined"
+                        onChange={handleChange}
+                      />
+                  </div>
                   <div>
                     <TextField
                         required
