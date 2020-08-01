@@ -82,7 +82,7 @@ const Activate: FunctionComponent<ActivateProps & RouteComponentProps & WithStyl
                       <div>Loading...</div>
                     }
                     {submissionState.isValidated && 
-                      <div>Successful!  You might now visit the <Link to="/login">sign-on page</Link> to login.</div>
+                      <div>Successful!  You might now visit the <Link to="/dashboard">sign on page</Link> to login.</div>
                     }
                 </div>
             }
