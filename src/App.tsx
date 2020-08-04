@@ -195,7 +195,7 @@ function App(props: AppProps) {
     setMobileOpen(!mobileOpen);
   };
 
-  const [title, updateTitle] = useState(null);
+  const [title, updateTitle] = useState({h1: ''});
   const [errorMessage, updateErrorMessage] = useState(null);
 
   return (
@@ -221,12 +221,12 @@ function App(props: AppProps) {
                 <Header onDrawerToggle={handleDrawerToggle} />
                 <main className={classes.main}>                    
                     <div className="App">
-                        <Title title={title}/>
+                        <Title title={title.h1}/>
                         <div className="container d-flex align-items-center flex-column">
                           <Suspense fallback={<div>Loading...</div>}>
                               <Switch>
                                   <Route path="/register">
-                                      <Register showError={updateErrorMessage} updateTitle={updateTitle}/>
+                                      <Register showError={updateErrorMessage} updateTitle={updateTitle} />
                                   </Route>
                                   <Route exact={true} path="/signin-oidc" component={Callback} />
                                   <Route exact={true} path="/logout" component={Logout} />

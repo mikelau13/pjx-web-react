@@ -17,7 +17,6 @@ export default class CountryService {
         return axios.get(`${process.env.REACT_APP_API_DOTNET_URL}/api/country/getall`, { headers });
     }
 
-    // TODO: not a good place to manipulate user here below, let's do that with a HoC
     getCountryAll(): Promise<any> {
         return this.authService.getUser()
         .then((user:any) => {

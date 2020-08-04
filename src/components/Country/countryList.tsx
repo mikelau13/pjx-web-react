@@ -14,7 +14,7 @@ const styles = (theme: Theme) =>
 );
 
 export type CountryListProps = {
-    updateTitle: any
+    updateTitle: React.Dispatch<React.SetStateAction<{h1:string}>>
 }
 
 const CountryList: FunctionComponent<CountryListProps & RouteComponentProps & WithStyles<typeof styles>> = (props) => {
@@ -22,8 +22,8 @@ const CountryList: FunctionComponent<CountryListProps & RouteComponentProps & Wi
     const countryService = new CountryService(authService);
     const { updateTitle, classes, ...rest } = props;
     const [loadingState, setLoading] = useState({isLoading: false, isFetched: false, errorMsg: '', countryList: []});
- 
-    //props.updateTitle('Country List');
+    
+    //props.updateTitle(prevState => ({...prevState, h1: 'Country List' }));
 
     const fetchCountryList = () => {
       setLoading(prevState => ({...prevState, isLoading: true }));

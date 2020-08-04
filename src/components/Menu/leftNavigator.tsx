@@ -12,34 +12,12 @@ import HomeIcon from '@material-ui/icons/Home';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import DnsRoundedIcon from '@material-ui/icons/DnsRounded';
 import PermMediaOutlinedIcon from '@material-ui/icons/PhotoSizeSelectActual';
-import PublicIcon from '@material-ui/icons/Public';
 import SettingsEthernetIcon from '@material-ui/icons/SettingsEthernet';
-import SettingsInputComponentIcon from '@material-ui/icons/SettingsInputComponent';
 import TimerIcon from '@material-ui/icons/Timer';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { Omit } from '@material-ui/types';
-
-const categories = [
-  {
-    id: 'Develop',
-    children: [
-      { id: 'Home', icon: <HomeIcon />, active: true, to: '/' },
-      { id: 'Country List', icon: <DnsRoundedIcon />, to: '/country/all' },
-      { id: 'Dashboard', icon: <PermMediaOutlinedIcon />, to: '/dashboard' },
-      { id: 'Hosting', icon: <PublicIcon />, to: '/' },
-      { id: 'Functions', icon: <SettingsEthernetIcon />, to: '/' },
-      { id: 'ML Kit', icon: <SettingsInputComponentIcon />, to: '/' },
-    ],
-  },
-  {
-    id: 'Authentication',
-    children: [
-      { id: 'Register', icon: <PersonAddIcon />, to: '/register' },
-      { id: 'Sign On', icon: <SettingsIcon />, to: '/dashboard' },
-      { id: 'Sign Out', icon: <TimerIcon />, to: '/logout' },
-    ],
-  },
-];
+import { IDENTITY_CONFIG } from '../../utils/authConst';
+import { AuthConsumer } from "../../providers/authProvider";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -64,8 +42,14 @@ const styles = (theme: Theme) =>
       paddingTop: theme.spacing(2),
       paddingBottom: theme.spacing(2),
     },
-    firebase: {
+    itemLogo: {
       fontSize: 24,
+      textDecoration: 'none',
+      color: theme.palette.common.white,
+    },
+    itemUnderLogo: {
+      fontSize: 18,
+      textDecoration: 'none',
       color: theme.palette.common.white,
     },
     itemActiveItem: {
@@ -89,28 +73,97 @@ export interface LeftNavigatorProps {
 
 function LeftNavigator(props: LeftNavigatorProps & Omit<DrawerProps, 'classes'> & WithStyles<typeof styles>) {
   const { classes, ...other } = props;
+  const [isLoggedIn, setLoggedIn] = React.useState(false);
 
   const renderLoggedIn = () => {
-    return (
-      <div>
-        {'Place Holder'}
-      </div>
-    );
+    const categories = [
+      {
+        main: 'Development',
+        children: [
+          { id: 'Home', icon: <HomeIcon />, active: true, to: '/' },
+          { id: 'Country List', icon: <DnsRoundedIcon />, to: '/country/all' },
+          { id: 'Dashboard', icon: <PermMediaOutlinedIcon />, to: '/dashboard' },
+        ],
+      },
+      {
+        main: 'My Account',
+        children: [
+          { id: 'Profile', icon: <PersonAddIcon />, redirect: IDENTITY_CONFIG.profile },
+          { id: 'Sign Out', icon: <TimerIcon />, to: '/logout' },
+        ],
+      },
+    ];
+
+    return renderSection(categories);
   }
 
   const renderLoggedOut = () => {
+    const categories = [
+      {
+        main: 'Development',
+        children: [
+          { id: 'Home', icon: <HomeIcon />, active: true, to: '/' }
+        ],
+      },
+      {
+        main: 'My Account',
+        children: [
+          { id: 'Register', icon: <PersonAddIcon />, to: '/register' },
+          { id: 'Sign On', icon: <SettingsIcon />, to: '/dashboard' }
+        ],
+      },
+    ];
+
+    return renderSection(categories);
+  }
+
+  const renderSection = (section: any) => {
     return (
-      <div>
-        {'Place Holder'}
-      </div>
+      <React.Fragment>
+        {section.map((eachSec: { main: string, children: any }) => (
+          <React.Fragment key={eachSec.main}>
+            <ListItem className={classes.categoryHeader}>
+              <ListItemText
+                classes={{
+                  primary: classes.categoryHeaderPrimary,
+                }}
+              >
+                {eachSec.main}
+              </ListItemText>
+            </ListItem>
+            {eachSec.children.map((subSec: { id: string, icon: any, active?: boolean, to: string, redirect: string }) => (
+              <ListItem
+                key={subSec.id}
+                button
+                className={clsx(classes.item, subSec.active && classes.itemActiveItem)}
+              >
+                <ListItemIcon className={classes.itemIcon}>{subSec.icon}</ListItemIcon>
+                <ListItemText
+                  classes={{
+                    primary: classes.itemPrimary,
+                  }}
+                >
+                  {subSec.to && (
+                    <Link className={clsx(classes.item, subSec.active && classes.itemActiveItem)} to={subSec.to}>{subSec.id}</Link>
+                  )}
+                  {subSec.redirect && (
+                    <a href={subSec.redirect} rel="noopener noreferrer">{subSec.id}</a>
+                  )}             
+                </ListItemText>
+              </ListItem>
+            ))}
+            <Divider className={classes.divider} />
+          </React.Fragment> 
+        ))}
+      </React.Fragment>
     );
   }
 
   return (
     <Drawer variant="permanent" {...other}>
       <List disablePadding>
-        <ListItem className={clsx(classes.firebase, classes.item, classes.itemCategory)}>
-          <a target="_blank" href="https://github.com/users/mikelau13/projects/1" rel="noopener noreferrer">
+        <ListItem>
+          <a className={clsx(classes.itemLogo)} target="_blank" href="https://github.com/users/mikelau13/projects/1" rel="noopener noreferrer">
               Pjx
           </a>
         </ListItem>
@@ -118,47 +171,22 @@ function LeftNavigator(props: LeftNavigatorProps & Omit<DrawerProps, 'classes'> 
           <ListItemIcon className={classes.itemIcon}>
             <SettingsEthernetIcon />
           </ListItemIcon>
-          <ListItemText
-            classes={{
-              primary: classes.itemPrimary,
-            }}
-          >
-            <a target="_blank" href="https://www.github.com/mikelau13/pjx-root/" rel="noopener noreferrer">
+          <ListItemText>
+            <a className={clsx(classes.itemUnderLogo)} target="_blank" href="https://www.github.com/mikelau13/pjx-root/" rel="noopener noreferrer">
                 Git: Pjx Project
             </a>
           </ListItemText>
         </ListItem>
-        {categories.map(({ id, children }) => (
-          <React.Fragment key={id}>
-            <ListItem className={classes.categoryHeader}>
-              <ListItemText
-                classes={{
-                  primary: classes.categoryHeaderPrimary,
-                }}
-              >
-                {id}
-              </ListItemText>
-            </ListItem>
-            {children.map(({ id: childId, icon, active, to }) => (
-              <ListItem
-                key={childId}
-                button
-                className={clsx(classes.item, active && classes.itemActiveItem)}
-                component={({innerRef,...props}) => <Link {...props} to={to} />}
-              >
-                <ListItemIcon className={classes.itemIcon}>{icon}</ListItemIcon>
-                <ListItemText
-                  classes={{
-                    primary: classes.itemPrimary,
-                  }}
-                >
-                  {childId}
-                </ListItemText>
-              </ListItem>
-            ))}
-            <Divider className={classes.divider} />
-          </React.Fragment>
-        ))}
+        <AuthConsumer>
+            {({ isAuthenticated }) => {
+                if (isAuthenticated()) {
+                  renderLoggedIn();
+                }
+                return <span></span>;
+            }}
+        </AuthConsumer>
+        {isLoggedIn && renderLoggedIn()}
+        {!isLoggedIn && renderLoggedIn()}
       </List>
     </Drawer>
   );

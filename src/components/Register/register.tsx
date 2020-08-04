@@ -23,7 +23,7 @@ type RegisterProps = {
 }
 
 const Register: FunctionComponent<RegisterProps & RouteComponentProps & WithStyles<typeof styles>> = props => {
-    const { classes, updateTitle } = props;
+    const { classes } = props;
 
     const [state , setState] = useState({
       email : '',
@@ -94,7 +94,7 @@ const Register: FunctionComponent<RegisterProps & RouteComponentProps & WithStyl
       }
     };
 
-    updateTitle('User Registration');
+    //props.updateTitle('User Registration');
 
     return (
       <React.Fragment>
