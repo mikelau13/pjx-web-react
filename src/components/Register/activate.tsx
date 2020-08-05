@@ -7,6 +7,7 @@ import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/s
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import Title from '../Header/title';
+import RegisterSteps from './steps';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -21,7 +22,7 @@ type ActivateProps = {
 
 
 const Activate: FunctionComponent<ActivateProps & RouteComponentProps & WithStyles<typeof styles>> = props => {
-    const [submissionState, setSubmission] = useState({isSubmitted: false, isValidated: false});
+    const [submissionState, setSubmission] = useState({isSubmitted: false, isValidated: false, step: 2});
 
     var qs = require('qs');
     var code = qs.parse(props.location.search, { ignoreQueryPrefix: true }).code;
@@ -35,7 +36,7 @@ const Activate: FunctionComponent<ActivateProps & RouteComponentProps & WithStyl
                 .then(function (response) {
                     if(response.status === 200){
                         props.showError(null);
-                        setSubmission(prevState => ({...prevState, isValidated: true }));
+                        setSubmission(prevState => ({...prevState, isValidated: true, step: 3 }));
                     } else {
                       console.log(response);
                       Object.keys(response.data).forEach(key => {
@@ -62,6 +63,7 @@ const Activate: FunctionComponent<ActivateProps & RouteComponentProps & WithStyl
     return (
         <React.Fragment>
             <Title title='Account Validation' />
+            <RegisterSteps step={submissionState.step} />
             {!submissionState.isSubmitted && 
               <div>
               <span>Hi {username}, please click the button below to activate your account. </span>

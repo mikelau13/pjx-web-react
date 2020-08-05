@@ -7,6 +7,7 @@ import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/s
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Title from '../Header/title';
+import RegisterSteps from './steps';
 
 
 const styles = (theme: Theme) =>
@@ -32,7 +33,7 @@ const Register: FunctionComponent<RegisterProps & RouteComponentProps & WithStyl
       displayName: '',
     });
 
-    const [submissionState, setSubmission] = useState({isSubmitting: false, isSubmissionComplete: false});
+    const [submissionState, setSubmission] = useState({isSubmitting: false, isSubmissionComplete: false, step: 0});
 
     const handleChange = (e:any) => {
       const { id, value } = e.target;
@@ -63,23 +64,23 @@ const Register: FunctionComponent<RegisterProps & RouteComponentProps & WithStyl
               .then(function (response) {
                   if(response.status === 200){
                       props.showError(null);
-                      setSubmission({isSubmitting: false, isSubmissionComplete: true});
+                      setSubmission({isSubmitting: false, isSubmissionComplete: true, step: 1});
                   } else {
                     Object.keys(response.data).forEach(key => {
                       props.showError(Reflect.get(response.data,key)[0]);
                     })
 
-                    setSubmission({isSubmitting: false, isSubmissionComplete: false});
+                    setSubmission({isSubmitting: false, isSubmissionComplete: false, step: 0});
                   }
               })
               .catch(function (error) {
                   console.log(error);
                   props.showError('Unexpected Error');
-                  setSubmission({isSubmitting: false, isSubmissionComplete: false});
+                  setSubmission({isSubmitting: false, isSubmissionComplete: false, step: 0});
               });    
       } else {
         props.showError('Please enter valid username and password');
-        setSubmission({isSubmitting: false, isSubmissionComplete: false});
+        setSubmission({isSubmitting: false, isSubmissionComplete: false, step: 0});
       }
   }
 
@@ -87,7 +88,7 @@ const Register: FunctionComponent<RegisterProps & RouteComponentProps & WithStyl
       e.preventDefault();
 
       if (state.password === state.confirmPassword) {
-        setSubmission({isSubmitting: true, isSubmissionComplete: false});
+        setSubmission({isSubmitting: true, isSubmissionComplete: false, step: 0});
         sendDetailsToServer();
       } else {
         props.showError('Passwords do not match');
@@ -97,6 +98,7 @@ const Register: FunctionComponent<RegisterProps & RouteComponentProps & WithStyl
     return (
       <React.Fragment>
         <Title title='User Registration' />
+        <RegisterSteps step={submissionState.step} />
         {!submissionState.isSubmissionComplete && 
           <div className="register">
               <div>
