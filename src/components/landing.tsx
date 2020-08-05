@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import { Link } from 'react-router-dom';
 
 export default class Landing extends Component {
   render() {
@@ -6,8 +7,8 @@ export default class Landing extends Component {
       <div>
         <h1>Hello World</h1>
         <ul>
-          <li><a href="/register">Register</a></li>
-          <li><a href="/dashboard">Dashboard</a></li>
+          <li><Link to="/register">Register</Link></li>
+          <li><Link to="/dashboard">Dashboard</Link></li>
         </ul>
       </div>
     );

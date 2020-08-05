@@ -1,7 +1,6 @@
 import React, { useState, Suspense, lazy } from "react";
 import { AuthProvider } from "./providers/authProvider";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import Title from './components/Header/title';
 import ErrorModal from './components/Alert/errorModal';
 
 import {
@@ -195,7 +194,6 @@ function App(props: AppProps) {
     setMobileOpen(!mobileOpen);
   };
 
-  const [title, updateTitle] = useState(null);
   const [errorMessage, updateErrorMessage] = useState(null);
 
   return (
@@ -221,20 +219,17 @@ function App(props: AppProps) {
                 <Header onDrawerToggle={handleDrawerToggle} />
                 <main className={classes.main}>                    
                     <div className="App">
-                        <Title title={title}/>
                         <div className="container d-flex align-items-center flex-column">
                           <Suspense fallback={<div>Loading...</div>}>
                               <Switch>
                                   <Route path="/register">
-                                      <Register showError={updateErrorMessage} updateTitle={updateTitle}/>
+                                      <Register showError={updateErrorMessage} />
                                   </Route>
                                   <Route exact={true} path="/signin-oidc" component={Callback} />
                                   <Route exact={true} path="/logout" component={Logout} />
                                   <Route exact={true} path="/logout/callback" component={LogoutCallback} />
                                   <Route exact={true} path="/silentrenew" component={SilentRenew} />
-                                  <UserRoute path="/country/all">
-                                    <CountryList updateTitle={updateTitle} />
-                                  </UserRoute>
+                                  <UserRoute path="/country/all" component={CountryList} />
                                   <Route exact={true} path="/account/activate">
                                     <Activate showError={updateErrorMessage} />
                                   </Route>
