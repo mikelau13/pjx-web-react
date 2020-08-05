@@ -6,6 +6,7 @@ import { IDENTITY_CONFIG } from '../../utils/authConst';
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Title from '../Header/title';
 
 
 const styles = (theme: Theme) =>
@@ -18,7 +19,6 @@ const styles = (theme: Theme) =>
 
 
 type RegisterProps = {
-  updateTitle: any
   showError: any
 }
 
@@ -94,10 +94,9 @@ const Register: FunctionComponent<RegisterProps & RouteComponentProps & WithStyl
       }
     };
 
-    //props.updateTitle('User Registration');
-
     return (
       <React.Fragment>
+        <Title title='User Registration' />
         {!submissionState.isSubmissionComplete && 
           <div className="register">
               <div>

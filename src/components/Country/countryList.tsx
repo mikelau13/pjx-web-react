@@ -4,6 +4,7 @@ import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/s
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@material-ui/core';
 import AuthService from '../../services/authService';
 import CountryService from '../../services/countryService';
+import Title from '../Header/title';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -13,17 +14,14 @@ const styles = (theme: Theme) =>
   }
 );
 
-export type CountryListProps = {
-    updateTitle: React.Dispatch<React.SetStateAction<{h1:string}>>
-}
+export type CountryListProps = {}
 
 const CountryList: FunctionComponent<CountryListProps & RouteComponentProps & WithStyles<typeof styles>> = (props) => {
     const authService = new AuthService();
     const countryService = new CountryService(authService);
-    const { updateTitle, classes, ...rest } = props;
+    const { classes } = props;
     const [loadingState, setLoading] = useState({isLoading: false, isFetched: false, errorMsg: '', countryList: []});
     
-    //props.updateTitle(prevState => ({...prevState, h1: 'Country List' }));
 
     const fetchCountryList = () => {
       setLoading(prevState => ({...prevState, isLoading: true }));
@@ -41,6 +39,7 @@ const CountryList: FunctionComponent<CountryListProps & RouteComponentProps & Wi
     const renderCountryList = (countryList: any) => {
       return (
         <TableContainer component={Paper}>
+        <Title title='Country List' />
         <Table className={classes.table}>
           <TableHead>
             <TableRow>

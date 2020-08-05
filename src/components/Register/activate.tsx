@@ -6,6 +6,7 @@ import { IDENTITY_CONFIG } from '../../utils/authConst';
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
+import Title from '../Header/title';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -60,7 +61,7 @@ const Activate: FunctionComponent<ActivateProps & RouteComponentProps & WithStyl
 
     return (
         <React.Fragment>
-            <div>Email Validation</div>
+            <Title title='Account Validation' />
             {!submissionState.isSubmitted && 
               <div>
               <span>Hi {username}, please click the button below to activate your account. </span>

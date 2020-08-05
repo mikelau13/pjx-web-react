@@ -73,7 +73,6 @@ export interface LeftNavigatorProps {
 
 function LeftNavigator(props: LeftNavigatorProps & Omit<DrawerProps, 'classes'> & WithStyles<typeof styles>) {
   const { classes, ...other } = props;
-  const [isLoggedIn, setLoggedIn] = React.useState(false);
 
   const renderLoggedIn = () => {
     const categories = [
@@ -147,7 +146,7 @@ function LeftNavigator(props: LeftNavigatorProps & Omit<DrawerProps, 'classes'> 
                     <Link className={clsx(classes.item, subSec.active && classes.itemActiveItem)} to={subSec.to}>{subSec.id}</Link>
                   )}
                   {subSec.redirect && (
-                    <a href={subSec.redirect} rel="noopener noreferrer">{subSec.id}</a>
+                    <a className={clsx(classes.item, subSec.active && classes.itemActiveItem)} href={subSec.redirect} rel="noopener noreferrer">{subSec.id}</a>
                   )}             
                 </ListItemText>
               </ListItem>
@@ -180,13 +179,12 @@ function LeftNavigator(props: LeftNavigatorProps & Omit<DrawerProps, 'classes'> 
         <AuthConsumer>
             {({ isAuthenticated }) => {
                 if (isAuthenticated()) {
-                  renderLoggedIn();
+                  return renderLoggedIn();
+                } else {
+                  return renderLoggedOut();
                 }
-                return <span></span>;
             }}
         </AuthConsumer>
-        {isLoggedIn && renderLoggedIn()}
-        {!isLoggedIn && renderLoggedIn()}
       </List>
     </Drawer>
   );
