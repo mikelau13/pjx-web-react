@@ -5,7 +5,7 @@ export const LogoutCallback = () => (
     <AuthConsumer>
         {({ signoutRedirectCallback }) => {
             signoutRedirectCallback();
-            return <span>loading</span>;
+            return <span>{'Loading... Please wait...'}</span>;
         }}
     </AuthConsumer>
 );

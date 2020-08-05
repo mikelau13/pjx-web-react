@@ -5,7 +5,7 @@ export const Logout = () => (
     <AuthConsumer>
         {({ logout }) => {
             logout();
-            return <span>loading</span>;
+            return <span>{'Loading... Please wait...'}</span>;
         }}
     </AuthConsumer>
 );

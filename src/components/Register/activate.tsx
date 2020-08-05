@@ -62,11 +62,11 @@ const Activate: FunctionComponent<ActivateProps & RouteComponentProps & WithStyl
 
     return (
         <React.Fragment>
-            <Title title='Account Validation' />
+            <Title title={'Account Validation'} />
             <RegisterSteps step={submissionState.step} />
             {!submissionState.isSubmitted && 
               <div>
-              <span>Hi {username}, please click the button below to activate your account. </span>
+              <span>{`Hi ${username}, please click the button below to activate your account.`}</span>
               <div className="break" />
               <Button
                 variant="contained"
@@ -75,17 +75,17 @@ const Activate: FunctionComponent<ActivateProps & RouteComponentProps & WithStyl
                 startIcon={<SaveIcon />}
                 onClick={handleSubmit}
               >
-                Activate Account
+                {`Activate Account`}
               </Button>
               </div>
             }
             {submissionState.isSubmitted && 
                 <div>
                     {!submissionState.isValidated && 
-                      <div>Loading...</div>
+                      <div>{'Loading... please wait...'}</div>
                     }
                     {submissionState.isValidated && 
-                      <div>Successful!  You might now visit the <Link to="/dashboard">sign on page</Link> to login.</div>
+                      <div>{`Successful!  You might now visit the ${<Link to="/dashboard">sign on page</Link>} to login.`}</div>
                     }
                 </div>
             }
