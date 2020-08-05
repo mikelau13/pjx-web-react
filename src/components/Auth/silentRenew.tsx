@@ -5,7 +5,7 @@ export const SilentRenew = () => (
     <AuthConsumer>
         {({ signinSilentCallback }) => {
             signinSilentCallback();
-            return <span>loading</span>;
+            return <span>{'Loading... Please wait...'}</span>;
         }}
     </AuthConsumer>
 );

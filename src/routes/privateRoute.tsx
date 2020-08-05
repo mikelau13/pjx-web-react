@@ -10,7 +10,7 @@ export const PrivateRoute = ({ component, ...rest }: any) => {
                     return <Component {...props} />;
                 } else {
                     signinRedirect();
-                    return <span>loading</span>;
+                    return <span>{'Loading... Please wait...'}</span>;
                 }
             }}
         </AuthConsumer>

@@ -87,7 +87,7 @@ function LeftNavigator(props: LeftNavigatorProps & Omit<DrawerProps, 'classes'> 
       {
         main: 'My Account',
         children: [
-          { id: 'Profile', icon: <PersonAddIcon />, redirect: IDENTITY_CONFIG.profile },
+          { id: 'Profile', icon: <PersonAddIcon />, redirect: `${IDENTITY_CONFIG.profile}?returnUrl=${encodeURIComponent('' + process.env.REACT_APP_PUBLIC_URL)}` },
           { id: 'Sign Out', icon: <TimerIcon />, to: '/logout' },
         ],
       },
