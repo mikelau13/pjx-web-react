@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 import { AuthConsumer } from '../providers/authProvider';
+import Loading from '../components/Common/loading';
 
 export const PrivateRoute = ({ component, ...rest }: any) => {
     const renderFn = (Component: any) => (props: any) => (
@@ -10,7 +11,7 @@ export const PrivateRoute = ({ component, ...rest }: any) => {
                     return <Component {...props} />;
                 } else {
                     signinRedirect();
-                    return <span>{'Loading... Please wait...'}</span>;
+                    return <Loading />;
                 }
             }}
         </AuthConsumer>

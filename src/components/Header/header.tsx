@@ -96,12 +96,12 @@ function Header(props: HeaderProps) {
           <Grid container alignItems="center" spacing={1}>
             <Grid item xs>
               <Typography color="inherit" variant="h5" component="h1">
-                Authentication
+                Welcome to mikelau13 Demo Website
               </Typography>
             </Grid>
             <Grid item>
               <Button className={classes.button} variant="outlined" color="inherit" size="small">
-                Web setup
+                <a className={classes.link} target="_blank" href="https://github.com/mikelau13" rel="noopener noreferrer">My Github Profile</a>
               </Button>
             </Grid>
             <Grid item>
@@ -122,10 +122,9 @@ function Header(props: HeaderProps) {
         elevation={0}
       >
         <Tabs value={0} textColor="inherit">
-          <Tab textColor="inherit" label="Users" />
-          <Tab textColor="inherit" label="Sign-in method" />
-          <Tab textColor="inherit" label="Templates" />
-          <Tab textColor="inherit" label="Usage" />
+          <Tab textColor="inherit" label="Tab 1" />
+          <Tab textColor="inherit" label="Tab 2" />
+          <Tab textColor="inherit" label="Tab 3" />
         </Tabs>
       </AppBar>
     </React.Fragment>
