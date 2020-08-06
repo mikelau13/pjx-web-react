@@ -10,10 +10,11 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import DnsRoundedIcon from '@material-ui/icons/DnsRounded';
+import AirplanemodeActiveIcon from '@material-ui/icons/AirplanemodeActive';
+import CommuteIcon from '@material-ui/icons/Commute';
 import PermMediaOutlinedIcon from '@material-ui/icons/PhotoSizeSelectActual';
 import SettingsEthernetIcon from '@material-ui/icons/SettingsEthernet';
-import TimerIcon from '@material-ui/icons/Timer';
+import PowerOffIcon from '@material-ui/icons/PowerOff';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { Omit } from '@material-ui/types';
 import { IDENTITY_CONFIG } from '../../utils/authConst';
@@ -80,7 +81,8 @@ function LeftNavigator(props: LeftNavigatorProps & Omit<DrawerProps, 'classes'> 
         main: 'Development',
         children: [
           { id: 'Home', icon: <HomeIcon />, active: true, to: '/' },
-          { id: 'Country List', icon: <DnsRoundedIcon />, to: '/country/all' },
+          { id: 'Country List', icon: <AirplanemodeActiveIcon />, to: '/country/all' },
+          { id: 'City List', icon: <CommuteIcon />, to: '/cities' },
           { id: 'Dashboard', icon: <PermMediaOutlinedIcon />, to: '/dashboard' },
         ],
       },
@@ -88,7 +90,7 @@ function LeftNavigator(props: LeftNavigatorProps & Omit<DrawerProps, 'classes'> 
         main: 'My Account',
         children: [
           { id: 'Profile', icon: <PersonAddIcon />, redirect: `${IDENTITY_CONFIG.profile}?returnUrl=${encodeURIComponent('' + process.env.REACT_APP_PUBLIC_URL)}` },
-          { id: 'Sign Out', icon: <TimerIcon />, to: '/logout' },
+          { id: 'Sign Out', icon: <PowerOffIcon />, to: '/logout' },
         ],
       },
     ];

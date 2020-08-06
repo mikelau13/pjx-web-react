@@ -24,10 +24,11 @@ import { LogoutCallback } from "./components/Auth/logoutCallback";
 import { PrivateRoute } from "./routes/privateRoute";
 import { UserRoute } from "./routes/userRoute";
 import { SilentRenew } from "./components/Auth/silentRenew";
+import Loading from './components/Common/loading';
 
 const Activate = lazy(() => import("./components/Register/activate"));
 const Register = lazy(() => import("./components/Register/register"));
-const Cities = lazy(() => import("./components/cities"));
+const CityList = lazy(() => import("./components/Country/cityList"));
 const Dashboard = lazy(() => import("./components/Dashboard/dashboard"));
 const Landing = lazy(() => import("./components/landing"));
 const CountryList = lazy(() => import("./components/Country/countryList"));
@@ -220,7 +221,7 @@ function App(props: AppProps) {
                 <main className={classes.main}>                    
                     <div className="App">
                         <div className="container d-flex align-items-center flex-column">
-                          <Suspense fallback={<div>Loading...</div>}>
+                          <Suspense fallback={<Loading />}>
                               <Switch>
                                   <Route path="/register">
                                       <Register showError={updateErrorMessage} />
@@ -234,7 +235,7 @@ function App(props: AppProps) {
                                     <Activate showError={updateErrorMessage} />
                                   </Route>
                                   <PrivateRoute path="/dashboard" component={Dashboard} />
-                                  <PrivateRoute path="/cities" component={Cities} />
+                                  <PrivateRoute path="/cities" component={CityList} />
                                   <Route path="/" component={Landing} /> 
                               </Switch>
                             </Suspense>

@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import Title from '../Header/title';
 import RegisterSteps from './steps';
+import Loading from '../Common/loading';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -82,10 +83,10 @@ const Activate: FunctionComponent<ActivateProps & RouteComponentProps & WithStyl
             {submissionState.isSubmitted && 
                 <div>
                     {!submissionState.isValidated && 
-                      <div>{'Loading... please wait...'}</div>
+                      <Loading />
                     }
                     {submissionState.isValidated && 
-                      <div>{`Successful!  You might now visit the ${<Link to="/dashboard">sign on page</Link>} to login.`}</div>
+                      <div>Successful!  You might now visit the <Link to="/dashboard">sign on page</Link> to login.</div>
                     }
                 </div>
             }
