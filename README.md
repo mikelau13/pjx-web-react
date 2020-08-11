@@ -2,7 +2,9 @@
 
 ## Dependencies
 
-This projet is a web client that depends other projects.  In order to launch the entire solution, please refer to instructions in [pjx-root](https://github.com/mikelau13/pjx-root).
+This projet is a web client that depends other projects, such that identity server, Apollo server, APIs.  
+
+In order to launch the entire solution, please refer to instructions in [pjx-root](https://github.com/mikelau13/pjx-root).
 
 
 ## Libraries 
@@ -14,7 +16,7 @@ This projet is a web client that depends other projects.  In order to launch the
 TODO: configure challenge code for `oidc-client` with `identity server`.
 
 
-## Available Scripts
+## Running the app
 
 To launch the app in Docker container, run:
 
@@ -24,16 +26,19 @@ docker-compose up
 
 Alternatively, in the project directory, you can run:
 
-### `npm start`
+```bash
+npm start
+```
 
 Runs the app in the development mode.<br />
 
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-By clicking on the `dashboard` button, the page will forward you to the `pjx-sso-identityserver` to sign on; you can sign-on using username=`alice` password=`alice`
+By clicking on the `dashboard` button, the page will forward you to the `pjx-sso-identityserver` to sign on.
 
-
-### `npm run build`
+```bash
+npm run build
+```
 
 Builds the app for production to the `build` folder.
 
