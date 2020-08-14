@@ -13,10 +13,13 @@ In order to launch the entire solution, please refer to instructions in [pjx-roo
 - [apollo-client](https://www.apollographql.com/docs/react/) - to hook to the [apollo-server](https://github.com/mikelau13/pjx-graphql-apollo).
 - [Material-UI](https://material-ui.com/) - a React UI framework
 
-TODO: configure challenge code for `oidc-client` with `identity server`.
+
+## Dependencies
+
+This web client is depending on other components such that APIs, Identity Server, Apollo Server, etc; so please follow the instructions in [pjx-root](https://github.com/mikelau13/pjx-root) if you want to run the complete solution.
 
 
-## Running the app
+## Running the web client
 
 To launch the app in Docker container, run:
 
@@ -30,23 +33,17 @@ Alternatively, in the project directory, you can run:
 npm start
 ```
 
-Runs the app in the development mode.<br />
-
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-By clicking on the `dashboard` button, the page will forward you to the `pjx-sso-identityserver` to sign on.
-
-```bash
-npm run build
-```
-
-Builds the app for production to the `build` folder.
+Here is how to build the app in development mode:
 
 ```bash
 npm run build
 ```
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.  Please also follow the instructions on [pjx-sso-identityserver](https://github.com/mikelau13/pjx-sso-identityserver) to set up `hosts` file and trust the self-signed SSL certificate.
+
+By clicking on the `dashboard` button, the page will forward you to the `pjx-sso-identityserver` to sign on.
 
 
 
@@ -72,10 +69,13 @@ If successful you should see the following in your termianl:
 root@2lsk39bd:/usr/app
 ```
 
-By default your working directory should be `usr/app`, which is the root directory for the **nextjs** app. All commands should be run from here.
-
 To exit the interactive terminal run the following:
 
 ```bash
 exit
 ```
+
+## TODO 
+
+- configure challenge code for `oidc-client` with `identity server`
+
