@@ -14,8 +14,12 @@ In order to launch the entire solution, please refer to instructions in [pjx-roo
 - [Material-UI](https://material-ui.com/) - a React UI framework
 
 
+## Dependencies
 
-## Running the app
+This web client is depending on other components such that APIs, Identity Server, Apollo Server, etc; so please follow the instructions in [pjx-root](https://github.com/mikelau13/pjx-root) if you want to run the complete solution.
+
+
+## Running the web client
 
 To launch the app in Docker container, run:
 
@@ -37,17 +41,16 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 Follow the instructions on [pjx-root](https://github.com/mikelau13/pjx-root#using-the-web-app) for how to browse this demo web site.
 
-```bash
-npm run build
-```
-
-Builds the app for production to the `build` folder.
 
 ```bash
 npm run build
 ```
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.  Please also follow the instructions on [pjx-sso-identityserver](https://github.com/mikelau13/pjx-sso-identityserver) to set up `hosts` file and trust the self-signed SSL certificate.
+
+By clicking on the `dashboard` button, the page will forward you to the `pjx-sso-identityserver` to sign on.
 
 
 
@@ -73,9 +76,13 @@ If successful you should see the following in your termianl:
 root@2lsk39bd:/usr/app
 ```
 
-
 To exit the interactive terminal run the following:
 
 ```bash
 exit
 ```
+
+## TODO 
+
+- configure challenge code for `oidc-client` with `identity server`
+
