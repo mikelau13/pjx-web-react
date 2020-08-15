@@ -4,16 +4,15 @@
 
 This projet is a web client that depends other projects, such that identity server, Apollo server, APIs.  
 
-In order to launch the entire solution, please refer to instructions in [pjx-root](https://github.com/mikelau13/pjx-root).
+In order to launch the entire solution, please refer to instructions in [pjx-root](https://github.com/mikelau13/pjx-root#running-a-solution).
 
 
 ## Libraries 
 
 - [oidc-client](https://github.com/IdentityModel/oidc-client-js/wiki) - to connect to the [identity server](https://github.com/mikelau13/pjx-sso-identityserver).
-- [apollo-client](https://www.apollographql.com/docs/react/) - to hook to the [apollo-server](https://github.com/mikelau13/pjx-graphql-apollo).
+- [apollo-client](https://www.apollographql.com/docs/react/) - to hook to the [pjx-graphql-apollo](https://github.com/mikelau13/pjx-graphql-apollo).
 - [Material-UI](https://material-ui.com/) - a React UI framework
 
-TODO: configure challenge code for `oidc-client` with `identity server`.
 
 
 ## Running the app
@@ -24,7 +23,7 @@ To launch the app in Docker container, run:
 docker-compose up 
 ```
 
-Alternatively, in the project directory, you can run:
+Alternatively, in the project directory, you can run for development purpose:
 
 ```bash
 npm start
@@ -34,7 +33,9 @@ Runs the app in the development mode.<br />
 
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-By clicking on the `dashboard` button, the page will forward you to the `pjx-sso-identityserver` to sign on.
+![pjx web react](/images/mobile_desktop.png)
+
+Follow the instructions on [pjx-root](https://github.com/mikelau13/pjx-root#using-the-web-app) for how to browse this demo web site.
 
 ```bash
 npm run build
@@ -72,7 +73,6 @@ If successful you should see the following in your termianl:
 root@2lsk39bd:/usr/app
 ```
 
-By default your working directory should be `usr/app`, which is the root directory for the **nextjs** app. All commands should be run from here.
 
 To exit the interactive terminal run the following:
 
