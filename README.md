@@ -4,13 +4,13 @@
 
 This projet is a web client that depends other projects, such that identity server, Apollo server, APIs.  
 
-In order to launch the entire solution, please refer to instructions in [pjx-root](https://github.com/mikelau13/pjx-root).
+In order to launch the entire solution, please refer to instructions in [pjx-root](https://github.com/mikelau13/pjx-root#running-a-solution).
 
 
 ## Libraries 
 
 - [oidc-client](https://github.com/IdentityModel/oidc-client-js/wiki) - to connect to the [identity server](https://github.com/mikelau13/pjx-sso-identityserver).
-- [apollo-client](https://www.apollographql.com/docs/react/) - to hook to the [apollo-server](https://github.com/mikelau13/pjx-graphql-apollo).
+- [apollo-client](https://www.apollographql.com/docs/react/) - to hook to the [pjx-graphql-apollo](https://github.com/mikelau13/pjx-graphql-apollo).
 - [Material-UI](https://material-ui.com/) - a React UI framework
 
 
@@ -27,13 +27,20 @@ To launch the app in Docker container, run:
 docker-compose up 
 ```
 
-Alternatively, in the project directory, you can run:
+Alternatively, in the project directory, you can run for development purpose:
 
 ```bash
 npm start
 ```
 
-Here is how to build the app in development mode:
+Runs the app in the development mode.<br />
+
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+![pjx web react](/images/mobile_desktop.png)
+
+Follow the instructions on [pjx-root](https://github.com/mikelau13/pjx-root#using-the-web-app) for how to browse this demo web site.
+
 
 ```bash
 npm run build
