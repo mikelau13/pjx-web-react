@@ -32,6 +32,7 @@ const CityList = lazy(() => import("./components/Country/cityList"));
 const Dashboard = lazy(() => import("./components/Dashboard/dashboard"));
 const Landing = lazy(() => import("./components/landing"));
 const CountryList = lazy(() => import("./components/Country/countryList"));
+const Calendar = lazy(() => import("./components/Calendar/calendar"));
 
 function Copyright() {
   return (
@@ -230,6 +231,9 @@ function App(props: AppProps) {
                                   <Route exact={true} path="/logout" component={Logout} />
                                   <Route exact={true} path="/logout/callback" component={LogoutCallback} />
                                   <Route exact={true} path="/silentrenew" component={SilentRenew} />
+                                  <Route exact={true} path="/calendar">
+                                    <Calendar />
+                                  </Route>
                                   <UserRoute path="/country/all" component={CountryList} />
                                   <Route exact={true} path="/account/activate">
                                     <Activate showError={updateErrorMessage} />

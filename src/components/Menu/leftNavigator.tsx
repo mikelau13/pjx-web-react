@@ -16,6 +16,7 @@ import PermMediaOutlinedIcon from '@material-ui/icons/PhotoSizeSelectActual';
 import SettingsEthernetIcon from '@material-ui/icons/SettingsEthernet';
 import PowerOffIcon from '@material-ui/icons/PowerOff';
 import SettingsIcon from '@material-ui/icons/Settings';
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import { Omit } from '@material-ui/types';
 import { IDENTITY_CONFIG } from '../../utils/authConst';
 import { AuthConsumer } from "../../providers/authProvider";
@@ -110,7 +111,8 @@ function LeftNavigator(props: LeftNavigatorProps & Omit<DrawerProps, 'classes'> 
         main: 'My Account',
         children: [
           { id: 'Register', icon: <PersonAddIcon />, to: '/register' },
-          { id: 'Sign On', icon: <SettingsIcon />, to: '/dashboard' }
+          { id: 'Sign On', icon: <SettingsIcon />, to: '/dashboard' },
+          { id: 'Calendar', icon: <CalendarTodayIcon />, to: '/calendar' },
         ],
       },
     ];
