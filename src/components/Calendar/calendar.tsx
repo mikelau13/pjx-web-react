@@ -3,6 +3,8 @@ import FullCalendar, { EventClickArg } from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from "@fullcalendar/timegrid"; 
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
+import AuthService from '../../services/authService';
+import CalendarService from '../../services/calendarService';
 
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -46,6 +48,9 @@ type DialogProps = {
 }
 
 const Calendar: FunctionComponent<WithStyles<typeof styles>> = (props) => {
+    const authService = new AuthService();
+    const calendarService = new CalendarService(authService);
+
     const { classes } = props;
 
     const [events, setEvents] = useState<EventProps[]>([]);
@@ -106,17 +111,24 @@ const Calendar: FunctionComponent<WithStyles<typeof styles>> = (props) => {
                 saveObj.end = undefined;
             }
 
-            console.log('TODO: write codes here to submit api and callback');
+            console.log('Submitting api and getting promise');
             console.log(saveObj);
-
-            setEvents([
-                ...events,
-                saveObj
-            ]);
-            
-            handleCloseDialog();
-        } else {
-
+            calendarService.eventCreate(saveObj)
+                .then(result => {
+                    console.log('calendarService.eventCreate(saveObj)');
+                    console.log(result);
+                    setEvents([
+                        ...events,
+                        saveObj
+                    ]);
+                    
+                    handleCloseDialog();
+                }).catch(error => {
+                    console.log('calendarService.eventCreate(saveObj)');
+                    console.log(`error: ${error}`);
+                });
+                
+            console.log('line after calendarService.eventCreate(saveObj)');
         }
     }
 
@@ -145,7 +157,7 @@ const Calendar: FunctionComponent<WithStyles<typeof styles>> = (props) => {
                     left: "prev,next",  
                     center: "title",  
                     right: "dayGridMonth,timeGridWeek,timeGridDay"  
-                }}  
+                }}
             />
             <Dialog open={open} onClose={handleCloseDialog} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Calendar Events</DialogTitle>
