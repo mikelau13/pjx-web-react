@@ -1,5 +1,5 @@
-import React, { FunctionComponent, useState, useEffect } from 'react';
-import FullCalendar, { EventClickArg } from '@fullcalendar/react';
+import React, { FunctionComponent, useState, useEffect, useCallback } from 'react';
+import FullCalendar, { EventClickArg, DatesSetArg } from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from "@fullcalendar/timegrid"; 
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
@@ -48,14 +48,19 @@ type DialogProps = {
 }
 
 const Calendar: FunctionComponent<WithStyles<typeof styles>> = (props) => {
-    const authService = new AuthService();
-    const calendarService = new CalendarService(authService);
+    const fetcher = useCallback(() => {
+        const authService = new AuthService();
+        const calendarService = new CalendarService(authService);
+
+        return calendarService;
+      }, []);
 
     const { classes } = props;
 
     const [events, setEvents] = useState<EventProps[]>([]);
     const [open, setOpenDialog] = useState(false);
-    const [dialogValues, setDialogValues] = useState<DialogProps>({ title: '', startTime: '00:00', allDay: true });  
+    const [dialogValues, setDialogValues] = useState<DialogProps>({ title: '', startTime: '00:00', allDay: true });
+    const [calView, setCalendarView] = useState({activeStart:'', activeEnd: ''});
 
     const handleOpenDialog = () => {
         setOpenDialog(true);
@@ -66,13 +71,18 @@ const Calendar: FunctionComponent<WithStyles<typeof styles>> = (props) => {
     };
 
     useEffect(() => {
-        console.log('TODO: mocking data here, need to write codes here to load data from api');
-        const result = [
-            { id: '1', title: 'event 1', start: '2020-08-10 13:00:00', end: '2020-08-13 05:00:00' },
-            { id: '2', title: 'event 2', start: '2020-08-15' }
-        ];
-        setEvents(result);
-    }, []); 
+        fetcher().readAll({start: calView.activeStart, end: calView.activeEnd})
+            .then(result => {
+                var events: EventProps[] = result.map((data:any) => {
+                    return { id: data.eventId, title: data.title, start: data.start, end: data.end, allDay: (data.end === null) };
+                });
+
+                console.log(events);
+                setEvents(events);
+            }).catch(error => {
+                console.log(error);
+            })
+    }, [fetcher, calView]); 
 
     const handleDateClick = (arg: DateClickArg) => {
         setDialogValues(prevState => ({...prevState, start: arg.date.toISOString().substring(0, 10) }));
@@ -102,7 +112,7 @@ const Calendar: FunctionComponent<WithStyles<typeof styles>> = (props) => {
         if (dialogValues.title.length && dialogValues.start) {
             var saveObj: EventProps = {
                 title: dialogValues.title, 
-                start: `${dialogValues.start}T${dialogValues.startTime}`,
+                start: `${dialogValues.start}T${dialogValues.startTime}:00-04:00`, // TODO: harding GMT-04 for now
                 end: dialogValues.end,
                 allDay: dialogValues.allDay
             };
@@ -113,10 +123,9 @@ const Calendar: FunctionComponent<WithStyles<typeof styles>> = (props) => {
 
             console.log('Submitting api and getting promise');
             console.log(saveObj);
-            calendarService.eventCreate(saveObj)
+
+            fetcher().eventCreate(saveObj)
                 .then(result => {
-                    console.log('calendarService.eventCreate(saveObj)');
-                    console.log(result);
                     setEvents([
                         ...events,
                         saveObj
@@ -127,13 +136,10 @@ const Calendar: FunctionComponent<WithStyles<typeof styles>> = (props) => {
                     console.log('calendarService.eventCreate(saveObj)');
                     console.log(`error: ${error}`);
                 });
-                
-            console.log('line after calendarService.eventCreate(saveObj)');
         }
     }
 
     const handleEventClick = (arg:EventClickArg) => {
-        console.log(arg);
         setDialogValues(prevState => ({...prevState
             , title: arg.event.title
             , end: ''
@@ -142,6 +148,10 @@ const Calendar: FunctionComponent<WithStyles<typeof styles>> = (props) => {
             , allDay: arg.event.allDay 
         }));
         handleOpenDialog();
+    }
+
+    const handleDatesSet = (arg:DatesSetArg) => {
+        setCalendarView({activeStart: arg.view.activeStart.toISOString(), activeEnd: arg.view.activeEnd.toISOString()});
     }
 
     return (
@@ -158,6 +168,7 @@ const Calendar: FunctionComponent<WithStyles<typeof styles>> = (props) => {
                     center: "title",  
                     right: "dayGridMonth,timeGridWeek,timeGridDay"  
                 }}
+                datesSet={handleDatesSet}
             />
             <Dialog open={open} onClose={handleCloseDialog} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Calendar Events</DialogTitle>

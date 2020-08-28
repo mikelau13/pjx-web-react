@@ -84,6 +84,7 @@ function LeftNavigator(props: LeftNavigatorProps & Omit<DrawerProps, 'classes'> 
           { id: 'Home', icon: <HomeIcon />, active: true, to: '/' },
           { id: 'Country List', icon: <AirplanemodeActiveIcon />, to: '/country/all' },
           { id: 'City List', icon: <CommuteIcon />, to: '/cities' },
+          { id: 'Calendar', icon: <CalendarTodayIcon />, to: '/calendar' },
           { id: 'Dashboard', icon: <PermMediaOutlinedIcon />, to: '/dashboard' },
         ],
       },
@@ -111,8 +112,7 @@ function LeftNavigator(props: LeftNavigatorProps & Omit<DrawerProps, 'classes'> 
         main: 'My Account',
         children: [
           { id: 'Register', icon: <PersonAddIcon />, to: '/register' },
-          { id: 'Sign On', icon: <SettingsIcon />, to: '/dashboard' },
-          { id: 'Calendar', icon: <CalendarTodayIcon />, to: '/calendar' },
+          { id: 'Sign On', icon: <SettingsIcon />, to: '/dashboard' }
         ],
       },
     ];
