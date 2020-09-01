@@ -2,6 +2,20 @@ import axios from 'axios';
 import AuthService from './authService';
 import { stringify } from 'querystring';
 
+export type EventApiProps = {
+    id?: number,
+    title: string,
+    start: string,
+    end?: string
+};
+
+export type EventApiResult = {
+  eventId: number,
+  title: string,
+  start: string,
+  end?: string
+};
+
 export default class CalendarService {
     authService: AuthService;
     accessToken?: string;
@@ -10,42 +24,84 @@ export default class CalendarService {
         this.authService = authService;
     }
 
-    _readAll = (token: string, postObj: any):Promise<any> => {
+    private apiPost = (token: string, url: string, postObj: any):Promise<any> => {
+      const headers = {
+        Accept: 'application/json',
+        Authorization: 'Bearer ' + token
+      };
+  
+      return axios.post(url, postObj, { headers })
+        .then(result => {
+          return Promise.resolve(result.data);
+        }).catch(error => {
+          if (error.response.status === 401) {
+            return this.authService.renewToken()
+              .then(renewedUser => {
+                headers.Authorization = 'Bearer ' + renewedUser.access_token;
+                return axios.post(url, postObj, { headers })
+                .then(result => {
+                  return Promise.resolve(result.data);
+                }).catch(error => {
+                  return Promise.reject(new Error('user is not logged in'));
+                });
+              })
+            .catch(error => {
+                return Promise.reject(error);
+            });
+          } else {
+              return Promise.reject(error);
+          }
+        });
+  }
+	
+	  private apiGet = (token: string, url: string, query_string: string):Promise<any> => {
         const headers = {
           contentType: 'application/json',
-          Accept: 'application/json',
           Authorization: 'Bearer ' + token
         };
-
-        var query_string = stringify(postObj);
     
-        return axios.get(`${process.env.REACT_APP_API_DOTNET_URL}/api/calendar/event/readall?` + query_string, { headers });
+        return axios.get(`${url}?${query_string}`, { headers })
+          .then(result => {
+            return Promise.resolve(result.data);
+          }).catch(error => {
+            if (error.response.status === 401) {
+              return this.authService.renewToken()
+                .then(renewedUser => {
+                  headers.Authorization = 'Bearer ' + renewedUser.access_token;
+                  return axios.get(`${url}?${query_string}`, { headers })
+                  .then(result => {
+                    return Promise.resolve(result.data);
+                  }).catch(error => {
+                    return Promise.reject(new Error('user is not logged in'));
+                  });
+                })
+              .catch(error => {
+                  return Promise.reject(error);
+              });
+            } else {
+                return Promise.reject(error);
+            }
+          });
     }
 
-    readAll(postObj: any): Promise<any> {
-        return this.authService.getUser()
+    readAllEvent = (postObj: any):Promise<any> => {
+      return this.getAccessToken()
+        .then(token => {
+          return this.apiGet(token, `${process.env.REACT_APP_API_DOTNET_URL}/api/calendar/event/readall`, stringify(postObj))
+        }).catch(error => {
+          return Promise.reject(error);
+        });
+    }
+
+    private getAccessToken = ():Promise<string> => {
+      return this.authService.getUser()
         .then((user:any) => {
           if (user) {
             if (user.access_token) {
-              return this._readAll(user.access_token, postObj)
-              .then(result => {
-                return Promise.resolve(result.data);
-              }).catch(error => {
-                if (error.response.status === 401) {
-                    return this.authService.renewToken()
-                    .then(renewedUser => {
-                        return this._readAll(renewedUser.access_token, postObj);
-                    })
-                    .catch(error => {
-                        return Promise.reject(error);
-                    });
-                } else {
-                    return Promise.reject(error);
-                }
-              });
+              return Promise.resolve(user.access_token);
             } else if (user) {
               return this.authService.renewToken().then(renewedUser => {
-                return this._readAll(renewedUser.access_token, postObj);
+                return Promise.resolve(renewedUser.access_token);
               });
             } else {
               return Promise.reject(new Error('user is not logged in'));
@@ -57,51 +113,23 @@ export default class CalendarService {
         .catch(error => {
             return Promise.reject(error);
         });
-    };
-
-    private _callApi = (token: string, postObj: any):Promise<any> => {
-        const headers = {
-          Accept: 'application/json',
-          Authorization: 'Bearer ' + token
-        };
-    
-        return axios.post(`${process.env.REACT_APP_API_DOTNET_URL}/api/calendar/event/create`, postObj, { headers });
     }
 
-    eventCreate(postObj: any): Promise<any> {
-        return this.authService.getUser()
-        .then((user:any) => {
-          if (user) {
-            if (user.access_token) {
-              return this._callApi(user.access_token, postObj)
-              .then(result => {
-                return Promise.resolve(result.data);
-              }).catch(error => {
-                if (error.response.status === 401) {
-                    return this.authService.renewToken()
-                    .then(renewedUser => {
-                        return this._callApi(renewedUser.access_token, postObj);
-                    })
-                    .catch(error => {
-                        return Promise.reject(error);
-                    });
-                } else {
-                    return Promise.reject(error);
-                }
-              });
-            } else if (user) {
-              return this.authService.renewToken().then(renewedUser => {
-                return this._callApi(renewedUser.access_token, postObj);
-              });
-            } else {
-              return Promise.reject(new Error('user is not logged in'));
-            }
-          } else {
-            return Promise.reject(new Error('no renewedUser'));
-          }
-        })
-        .catch(error => {
-            return Promise.reject(error);
+    eventCreate = (postObj: any):Promise<any> => {
+      return this.getAccessToken()
+        .then(token => {
+          return this.apiPost(token, `${process.env.REACT_APP_API_DOTNET_URL}/api/calendar/event/create`, postObj)
+        }).catch(error => {
+          return Promise.reject(error);
         });
-    };
+    }
+
+    eventUpdate = (postObj: any):Promise<any> => {
+      return this.getAccessToken()
+        .then(token => {
+          return this.apiPost(token, `${process.env.REACT_APP_API_DOTNET_URL}/api/calendar/event/update`, postObj)
+        }).catch(error => {
+          return Promise.reject(error);
+        });
+    }
 }

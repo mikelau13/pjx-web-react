@@ -4,7 +4,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from "@fullcalendar/timegrid"; 
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 import AuthService from '../../services/authService';
-import CalendarService from '../../services/calendarService';
+import CalendarService, { EventApiProps, EventApiResult } from '../../services/calendarService';
 
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -40,11 +40,13 @@ type EventProps = {
 };
 
 type DialogProps = {
+    id?: string
     title: string,
     start?: string,
     startTime?: string,
     end?: string,
-    allDay: boolean
+    allDay: boolean,
+    action: string
 }
 
 const Calendar: FunctionComponent<WithStyles<typeof styles>> = (props) => {
@@ -59,7 +61,7 @@ const Calendar: FunctionComponent<WithStyles<typeof styles>> = (props) => {
 
     const [events, setEvents] = useState<EventProps[]>([]);
     const [open, setOpenDialog] = useState(false);
-    const [dialogValues, setDialogValues] = useState<DialogProps>({ title: '', startTime: '00:00', allDay: true });
+    const [dialogValues, setDialogValues] = useState<DialogProps>({ title: '', startTime: '00:00', allDay: true, action: 'Add' });
     const [calView, setCalendarView] = useState({activeStart:'', activeEnd: ''});
 
     const handleOpenDialog = () => {
@@ -71,21 +73,22 @@ const Calendar: FunctionComponent<WithStyles<typeof styles>> = (props) => {
     };
 
     useEffect(() => {
-        fetcher().readAll({start: calView.activeStart, end: calView.activeEnd})
-            .then(result => {
-                var events: EventProps[] = result.map((data:any) => {
-                    return { id: data.eventId, title: data.title, start: data.start, end: data.end, allDay: (data.end === null) };
-                });
+        if (calView.activeStart && calView.activeEnd) {
+            fetcher().readAllEvent({start: calView.activeStart, end: calView.activeEnd})
+                .then((result:EventApiResult[]) => {
+                    var events: EventProps[] = result.map((data:EventApiResult) => {
+                        return { id: data.eventId.toString(), title: data.title, start: data.start, end: data.end, allDay: (data.end === null) };
+                    });
 
-                console.log(events);
-                setEvents(events);
-            }).catch(error => {
-                console.log(error);
-            })
+                    setEvents(events);
+                }).catch(error => {
+                    console.log(error);
+                })
+        }
     }, [fetcher, calView]); 
 
     const handleDateClick = (arg: DateClickArg) => {
-        setDialogValues(prevState => ({...prevState, start: arg.date.toISOString().substring(0, 10) }));
+        setDialogValues(prevState => ({...prevState, action: 'Add', allDay: true, title: '', startTime: '00:00', start: arg.date.toISOString().substring(0, 10), end: '' }));
         handleOpenDialog();
     };
 
@@ -110,42 +113,69 @@ const Calendar: FunctionComponent<WithStyles<typeof styles>> = (props) => {
 
     const handleAddClick = () => {
         if (dialogValues.title.length && dialogValues.start) {
-            var saveObj: EventProps = {
+            var saveObj: EventApiProps = {
+                id: dialogValues.id ? parseInt(dialogValues.id) : undefined,
                 title: dialogValues.title, 
-                start: `${dialogValues.start}T${dialogValues.startTime}:00-04:00`, // TODO: harding GMT-04 for now
-                end: dialogValues.end,
-                allDay: dialogValues.allDay
+                start: `${dialogValues.start}T${dialogValues.startTime?.substring(0, 5)}:00-04:00`, // TODO: harding GMT-04 for now
+                end: dialogValues.end
             };
 
             if (dialogValues.allDay){
                 saveObj.end = undefined;
             }
 
-            console.log('Submitting api and getting promise');
-            console.log(saveObj);
-
-            fetcher().eventCreate(saveObj)
-                .then(result => {
-                    setEvents([
-                        ...events,
-                        saveObj
-                    ]);
-                    
-                    handleCloseDialog();
-                }).catch(error => {
-                    console.log('calendarService.eventCreate(saveObj)');
-                    console.log(`error: ${error}`);
-                });
+            switch(dialogValues.action)
+            {
+                case "Add": 
+                    fetcher().eventCreate(saveObj)
+                    .then((result:EventApiResult) => {
+                        setEvents([
+                            ...events,
+                            {
+                                ...saveObj,
+                                id: result.eventId.toString(),
+                                allDay: dialogValues.allDay
+                            }
+                        ]);
+                        
+                        handleCloseDialog();
+                    }).catch(error => {
+                        console.log('calendarService.eventCreate(saveObj)');
+                        console.log(`error: ${error}`);
+                    });
+                    break;
+                case "Update":
+                    fetcher().eventUpdate(saveObj)
+                    .then((result:EventApiResult) => {
+                        events[events.findIndex(value => { return value.id === result.eventId.toString(); })] = 
+                            {
+                                ...saveObj,
+                                id: result.eventId.toString(),
+                                allDay: dialogValues.allDay
+                            };
+                        setEvents([
+                            ...events
+                        ]);
+                        
+                        handleCloseDialog();
+                    }).catch(error => {
+                        console.log('calendarService.eventUpdate(saveObj)');
+                        console.log(`error: ${error}`);
+                    });
+                    break;
+            }
         }
     }
 
     const handleEventClick = (arg:EventClickArg) => {
         setDialogValues(prevState => ({...prevState
+            , id: arg.event.id
             , title: arg.event.title
-            , end: ''
+            , end: (arg.event.end ? `${arg.event.end.toISOString().substring(0, 10)}T${arg.event.end.toLocaleTimeString()}` : '')
             , start: arg.event.start?.toISOString().substring(0, 10)
-            , startTime: ''
-            , allDay: arg.event.allDay 
+            , startTime: arg.event.start?.toLocaleTimeString()
+            , allDay: arg.event.allDay
+            , action: 'Update'
         }));
         handleOpenDialog();
     }
@@ -173,7 +203,7 @@ const Calendar: FunctionComponent<WithStyles<typeof styles>> = (props) => {
             <Dialog open={open} onClose={handleCloseDialog} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Calendar Events</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>Add Event</DialogContentText>
+                    <DialogContentText>{dialogValues.action} Event</DialogContentText>
                     <TextField
                         autoFocus
                         margin="normal"
@@ -241,7 +271,7 @@ const Calendar: FunctionComponent<WithStyles<typeof styles>> = (props) => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseDialog} color="primary">Cancel</Button>
-                    <Button onClick={handleAddClick} color="primary">Add</Button>
+                    <Button onClick={handleAddClick} color="primary">{dialogValues.action}</Button>
                 </DialogActions>
             </Dialog>
         </>
