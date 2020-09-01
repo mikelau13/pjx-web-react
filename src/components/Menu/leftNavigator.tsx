@@ -16,6 +16,7 @@ import PermMediaOutlinedIcon from '@material-ui/icons/PhotoSizeSelectActual';
 import SettingsEthernetIcon from '@material-ui/icons/SettingsEthernet';
 import PowerOffIcon from '@material-ui/icons/PowerOff';
 import SettingsIcon from '@material-ui/icons/Settings';
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import { Omit } from '@material-ui/types';
 import { IDENTITY_CONFIG } from '../../utils/authConst';
 import { AuthConsumer } from "../../providers/authProvider";
@@ -83,6 +84,7 @@ function LeftNavigator(props: LeftNavigatorProps & Omit<DrawerProps, 'classes'> 
           { id: 'Home', icon: <HomeIcon />, active: true, to: '/' },
           { id: 'Country List', icon: <AirplanemodeActiveIcon />, to: '/country/all' },
           { id: 'City List', icon: <CommuteIcon />, to: '/cities' },
+          { id: 'Calendar', icon: <CalendarTodayIcon />, to: '/calendar' },
           { id: 'Dashboard', icon: <PermMediaOutlinedIcon />, to: '/dashboard' },
         ],
       },

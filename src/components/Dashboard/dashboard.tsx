@@ -8,6 +8,7 @@ export default class Dashboard extends Component {
           <h1>Dashboard</h1>
           <ul>
             <li><Link to="/cities">See All Cities</Link></li>
+            <li><Link to="/calendar">See My Calendar</Link></li>
             <li><Link to="/logout">Sign Out</Link></li>
         </ul>
         </div>

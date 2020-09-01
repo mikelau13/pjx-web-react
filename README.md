@@ -12,6 +12,7 @@ In order to launch the entire solution, please refer to instructions in [pjx-roo
 - [oidc-client](https://github.com/IdentityModel/oidc-client-js/wiki) - to connect to the [identity server](https://github.com/mikelau13/pjx-sso-identityserver).
 - [apollo-client](https://www.apollographql.com/docs/react/) - to hook to the [pjx-graphql-apollo](https://github.com/mikelau13/pjx-graphql-apollo).
 - [Material-UI](https://material-ui.com/) - a React UI framework
+- [FullCalendar](https://fullcalendar.io/) - a JavaScript Calendar
 
 
 ## Dependencies
