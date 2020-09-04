@@ -4,7 +4,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from "@fullcalendar/timegrid"; 
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 import AuthService from '../../services/authService';
-import CalendarService, { EventApiProps, EventApiResult } from '../../services/calendarService';
+import CalendarService, { EventDeleteProps, EventApiProps, EventApiResult } from '../../services/calendarService';
 
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -46,7 +46,8 @@ type DialogProps = {
     startTime?: string,
     end?: string,
     allDay: boolean,
-    action: string
+    action: string,
+    deleteDisabled: boolean
 }
 
 const Calendar: FunctionComponent<WithStyles<typeof styles>> = (props) => {
@@ -61,7 +62,7 @@ const Calendar: FunctionComponent<WithStyles<typeof styles>> = (props) => {
 
     const [events, setEvents] = useState<EventProps[]>([]);
     const [open, setOpenDialog] = useState(false);
-    const [dialogValues, setDialogValues] = useState<DialogProps>({ title: '', startTime: '00:00', allDay: true, action: 'Add' });
+    const [dialogValues, setDialogValues] = useState<DialogProps>({ title: '', startTime: '00:00', allDay: true, action: 'Add', deleteDisabled: true });
     const [calView, setCalendarView] = useState({activeStart:'', activeEnd: ''});
 
     const handleOpenDialog = () => {
@@ -88,7 +89,7 @@ const Calendar: FunctionComponent<WithStyles<typeof styles>> = (props) => {
     }, [fetcher, calView]); 
 
     const handleDateClick = (arg: DateClickArg) => {
-        setDialogValues(prevState => ({...prevState, action: 'Add', allDay: true, title: '', startTime: '00:00', start: arg.date.toISOString().substring(0, 10), end: '' }));
+        setDialogValues(prevState => ({...prevState, action: 'Add', deleteDisabled: true, allDay: true, title: '', startTime: '00:00', start: arg.date.toISOString().substring(0, 10), end: '' }));
         handleOpenDialog();
     };
 
@@ -167,6 +168,33 @@ const Calendar: FunctionComponent<WithStyles<typeof styles>> = (props) => {
         }
     }
 
+    const handleDeleteClick = () => {
+        if (dialogValues.id) {
+            var eventId: number = parseInt(dialogValues.id);
+            var saveObj: EventDeleteProps = {
+                eventId: eventId
+            };
+
+            fetcher().eventDelete(saveObj)
+            .then((result:boolean) => {
+                if (result) {
+                    var deletedItem = events.splice(events.findIndex(value => { return value.id === eventId.toString(); }));
+                    console.log('deletedItem');
+                    console.log(deletedItem);
+
+                    setEvents([
+                        ...events
+                    ]);
+                    
+                    handleCloseDialog();
+                }
+            }).catch(error => {
+                console.log('calendarService.eventCreate(saveObj)');
+                console.log(`error: ${error}`);
+            });
+        }
+    }
+
     const handleEventClick = (arg:EventClickArg) => {
         setDialogValues(prevState => ({...prevState
             , id: arg.event.id
@@ -176,6 +204,7 @@ const Calendar: FunctionComponent<WithStyles<typeof styles>> = (props) => {
             , startTime: arg.event.start?.toLocaleTimeString()
             , allDay: arg.event.allDay
             , action: 'Update'
+            , deleteDisabled: false
         }));
         handleOpenDialog();
     }
@@ -272,6 +301,7 @@ const Calendar: FunctionComponent<WithStyles<typeof styles>> = (props) => {
                 <DialogActions>
                     <Button onClick={handleCloseDialog} color="primary">Cancel</Button>
                     <Button onClick={handleAddClick} color="primary">{dialogValues.action}</Button>
+                    <Button onClick={handleDeleteClick} color="primary" disabled={dialogValues.deleteDisabled}>Delete</Button>
                 </DialogActions>
             </Dialog>
         </>
