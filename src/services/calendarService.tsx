@@ -27,7 +27,7 @@ export default class CalendarService extends UserSubmitUtility {
     readAllEvent = (postObj: any):Promise<any> => {
       return this.getAccessToken()
         .then(token => {
-          return this.apiGet(token, `${baseUrl}/readlAll`, stringify(postObj))
+          return this.apiGet(token, `${baseUrl}/readAll`, stringify(postObj))
         }).catch(error => {
           return Promise.reject(error);
         });
