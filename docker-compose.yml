@@ -6,9 +6,9 @@ services:
   pjx-web-react:
     build:
       context: .
-    #  dockerfile: Dockerfile.dev
+    # dockerfile: Dockerfile.dev
     container_name: pjx-web-react-dev
-    command: npm start
+    # command: npm start
     volumes:
       - .:/usr/react
     ports:
